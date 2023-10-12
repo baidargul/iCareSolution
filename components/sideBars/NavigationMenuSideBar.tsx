@@ -1,9 +1,8 @@
 'use client'
-import { FileBarChart2, FileCheck2, ScrollText, Users2Icon, Users, Landmark } from "lucide-react"
+import { FileBarChart2, FileCheck2, ScrollText, Users2Icon, Users, Landmark, Box } from "lucide-react"
 import { ScrollArea } from "../ui/scroll-area";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation"
-import { cn } from "@/lib/utils";
 
 const NavigationMenuSideBar = () => {
     const params = useParams()
@@ -26,6 +25,12 @@ const NavigationMenuSideBar = () => {
             label: "Purchase Orders",
             icon: <ScrollText />,
             link: "/purchases"
+        },
+        {
+            name: "inventory",
+            label: "Inventory",
+            icon: <Box />,
+            link: "/inventory"
         },
         {
             name: "customers",
@@ -55,7 +60,7 @@ const NavigationMenuSideBar = () => {
     }
 
     return (
-        <ScrollArea className="bg-theme-Slate min-h-screen">
+        <ScrollArea className="bg-theme-Slate min-h-screen w-56 select-none">
             <div className="py-4 flex flex-col gap-4">
                 {
                     options.map((option, index) => {

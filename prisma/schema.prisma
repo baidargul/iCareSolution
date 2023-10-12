@@ -7,6 +7,69 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model profile {
+  id        String    @id @default(uuid())
+  userId    String?   @unique(map: "userID")
+  name      String
+  imageURL  String?
+  email     String
+  createdAt DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime? @default(now()) @db.Timestamptz(6)
+  role      Role      @default(SUPERADMIN)
+}
+
+model purchase {
+  id             String   @id @default(uuid())
+  purchaseId     String?
+  dateOfPurchase DateTime @default(now()) @db.Timetz(6)
+  accountId      String
+  purchasedBy    String?
+  description    String?
+  amount         Int?     @default(0)
+}
+
+model categories {
+  id   String @id @default(uuid())
+  name String @unique(map: "name")
+}
+
+model objectProperties {
+  id           String  @id @default(uuid())
+  objectId     String?
+  propertyId   String?
+  index        Int?
+  defaultValue String?
+}
+
+model objects {
+  id          String @id @default(uuid())
+  categoryId  String
+  name        String
+  description String
+}
+
+model property {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  type        String?
+}
+
+model purchaseRegister {
+  id         String @id @default(uuid())
+  purchaseId String
+  objectId   String
+  cost       Int    @default(0)
+}
+
+model propertyValues {
+  id          String @id @default(uuid())
+  propertyId  String
+  name        String
+  description String
+  index       Int?
+}
+
 enum Role {
   SUPERADMIN
   ADMIN
@@ -15,13 +78,9 @@ enum Role {
   USER
 }
 
-model profile {
-  id        String    @id @default(uuid())
-  userId    String?   @unique(map: "userID")
-  name      String
-  imageURL  String?
-  email     String
-  createdAt DateTime? @db.Timestamptz(6) @default(now())
-  updatedAt DateTime? @db.Timestamptz(6) @default(now())
-  role     Role      @default(SUPERADMIN)
+enum PropertyTypes {
+  TEXT
+  SELECTSINGLE
+  SELECTMULTIPLE
+  BOOLEAN
 }
