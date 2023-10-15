@@ -31,7 +31,7 @@ const ObjectCreateHeader = (props: Props) => {
             category,
         }
 
-        const res = await axios.post('/api/objects', object).then((res) => {
+        const res = await axios.post('/api/objects', { ...object }).then((res) => {
             const data = res.data;
             console.log(data);
         })
