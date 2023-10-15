@@ -20,8 +20,8 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={cn(font.className, 'flex flex-row')}>
-          <NavigationMenuSideBar />
+        <body className={cn(font.className, '')}>
+          {/* <NavigationMenuSideBar /> */}
           {children}
         </body>
       </html>

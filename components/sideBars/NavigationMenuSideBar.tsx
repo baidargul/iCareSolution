@@ -3,6 +3,7 @@ import { FileBarChart2, FileCheck2, ScrollText, Users2Icon, Users, Landmark, Box
 import { ScrollArea } from "../ui/scroll-area";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation"
+import { UserButton } from "@clerk/nextjs";
 
 const NavigationMenuSideBar = () => {
     const params = useParams()
