@@ -31,6 +31,7 @@ model purchase {
 model categories {
   id   String @id @default(uuid())
   name String @unique(map: "name")
+  type CategoryTypes
 }
 
 model objectProperties {
@@ -83,4 +84,8 @@ enum PropertyTypes {
   SELECTSINGLE
   SELECTMULTIPLE
   BOOLEAN
+}
+enum CategoryTypes {
+  FIXED
+  VARIANT
 }

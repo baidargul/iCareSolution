@@ -1,5 +1,5 @@
 'use client'
-import { FileBarChart2, FileCheck2, ScrollText, Users2Icon, Users, Landmark, Box } from "lucide-react"
+import { FileBarChart2, FileCheck2, ScrollText, Users2Icon, Users, Landmark, Box, Glasses } from "lucide-react"
 import { ScrollArea } from "../ui/scroll-area";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation"
@@ -16,6 +16,12 @@ const NavigationMenuSideBar = () => {
             link: "/"
         },
         {
+            name: "objects",
+            label: "Objects",
+            icon: <Glasses />,
+            link: "/objects/browse"
+        },
+        {
             name: "sales",
             label: "Sale Orders",
             icon: <FileCheck2 />,
@@ -25,7 +31,7 @@ const NavigationMenuSideBar = () => {
             name: "purchases",
             label: "Purchase Orders",
             icon: <ScrollText />,
-            link: "/purchases"
+            link: "/purchases/browse/"
         },
         {
             name: "inventory",

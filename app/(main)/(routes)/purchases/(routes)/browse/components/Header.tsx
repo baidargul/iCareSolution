@@ -1,13 +1,16 @@
 'use client'
 
 import { Plus, Search } from "lucide-react"
+import { useRouter } from "next/navigation";
 const PurchasesPageHeader = () => {
+    const router = useRouter();
     const actions = [
         {
             name: "Create Purchase",
             icon: <Plus />,
             onClick: () => {
                 console.log("Create Purchase");
+                router.push("/purchases/create");
             }
         },
         {
