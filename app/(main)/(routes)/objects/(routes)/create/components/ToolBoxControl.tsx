@@ -5,6 +5,7 @@ import React from 'react'
 type Props = {
     tool: {
         name: string,
+        value: string,
         icon: React.ReactNode,
         toolTip: string,
     }

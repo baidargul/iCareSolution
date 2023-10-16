@@ -4,7 +4,6 @@ import ToolBoxObjectCreate from "./components/ToolBox";
 import { prisma } from "@/lib/prisma-db"
 import { initialProfile, } from "@/lib/initial-profile";
 import { redirectToSignIn } from "@clerk/nextjs";
-import { Dna } from "lucide-react";
 
 const ObjectsCreateLayout = async ({ children }: { children: React.ReactNode }) => {
     const profile = await initialProfile();
