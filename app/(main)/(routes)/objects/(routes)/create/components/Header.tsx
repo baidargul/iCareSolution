@@ -7,28 +7,23 @@ import HeaderActions from './HeaderActions'
 
 type Props = {
     newObjectIndex?: number | undefined
-}
-type Object = {
-    id: string,
-    name: string,
-    description: string,
-    category: string,
+    availableCategories: any
 }
 
 const ObjectCreateHeader = (props: Props) => {
-    const [object, setObject] = React.useState<Object>({} as Object)
     const [isDoing, setIsDoing] = React.useState(false)
     const [name, setName] = React.useState('')
     const [description, setDescription] = React.useState('')
-    const [category, setCategory] = React.useState('' as string)
-
+    const [objectType, setObjectType] = React.useState('FIXED' as string)
+    const [selectedCategory, setSelectedCategory] = React.useState('' as string)
 
     const DoSave = async () => {
         setIsDoing(true)
         const object = {
             name,
             description,
-            category,
+            objectType,
+            category: selectedCategory,
         }
 
         const res = await axios.post('/api/objects', { ...object }).then((res) => {
@@ -45,14 +40,15 @@ const ObjectCreateHeader = (props: Props) => {
         const object = {
             name,
             description,
-            category,
+            objectType,
+            category: selectedCategory,
         }
         console.log(object)
         setIsDoing(false)
     }
 
     const propForwarder = {
-        name, setName, description, setDescription, category, setCategory, DoSave, DoDelete
+        name, setName, description, setDescription, objectType, setObjectType, availableCategories: props.availableCategories, setSelectedCategory, isDoing, DoSave, DoDelete
     }
 
 

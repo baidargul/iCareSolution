@@ -4,6 +4,7 @@ import ToolBoxObjectCreate from "./components/ToolBox";
 import { prisma } from "@/lib/prisma-db"
 import { initialProfile, } from "@/lib/initial-profile";
 import { redirectToSignIn } from "@clerk/nextjs";
+import { Dna } from "lucide-react";
 
 const ObjectsCreateLayout = async ({ children }: { children: React.ReactNode }) => {
     const profile = await initialProfile();
@@ -11,9 +12,23 @@ const ObjectsCreateLayout = async ({ children }: { children: React.ReactNode }) 
 
     const newObjectIndex: number = (await prisma.objects.findMany({})).length + 1;
 
+    const categories = await prisma.categories.findMany({
+        orderBy: {
+            name: 'asc'
+        }
+    })
+
+    const availableCategories = [] as any;
+    categories.map((category) => {
+        availableCategories.push({
+            value: category.name,
+            label: category.name.toUpperCase(),
+        })
+    })
+
     return (
         <div className="w-full min-h-screen  bg-theme-Secondry select-none flex flex-col justify-between">
-            <ObjectCreateHeader newObjectIndex={newObjectIndex} />
+            <ObjectCreateHeader newObjectIndex={newObjectIndex} availableCategories={availableCategories} />
             <div className="flex w-full">
                 <ToolBoxObjectCreate />
                 {children}

@@ -42,24 +42,24 @@ const statuses: Status[] = [
   },
 ]
 
-interface ComboBox_SelectCategoryTypeProps {
-  setCategoryType: any
+interface ComboBox_SelectObjectTypeProps {
+  setObjectType: any
 }
 
-export function ComboBox_SelectCategoryType(props: ComboBox_SelectCategoryTypeProps) {
+export function ComboBox_SelectObjectType(props: ComboBox_SelectObjectTypeProps) {
   const [open, setOpen] = React.useState(false)
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
     null
   )
   function selectValue(value: Status) {
     setSelectedStatus(value)
-    props.setCategoryType(value.value)
+    props.setObjectType(value.value)
     setOpen(false)
   }
 
   return (
     <div className="flex items-center space-x-4">
-      <p className="text-sm text-muted-foreground">Category type:</p>
+      <p className="text-sm text-muted-foreground">Object type:</p>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -79,7 +79,7 @@ export function ComboBox_SelectCategoryType(props: ComboBox_SelectCategoryTypePr
         </PopoverTrigger>
         <PopoverContent className="p-0" side="bottom" align="start">
           <Command>
-            <CommandInput placeholder="Type category name..." />
+            <CommandInput placeholder="Type object name..." />
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup>

@@ -31,7 +31,6 @@ model purchase {
 model categories {
   id   String @id @default(uuid())
   name String @unique(map: "name")
-  type CategoryTypes
 }
 
 model objectProperties {
@@ -47,13 +46,14 @@ model objects {
   categoryId  String
   name        String
   description String
+  type ObjectTypes
 }
 
 model property {
   id          String  @id @default(uuid())
   name        String  @unique
   description String?
-  type        String?
+  type        PropertyTypes
 }
 
 model purchaseRegister {
@@ -85,7 +85,7 @@ enum PropertyTypes {
   SELECTMULTIPLE
   BOOLEAN
 }
-enum CategoryTypes {
+enum ObjectTypes {
   FIXED
   VARIANT
 }

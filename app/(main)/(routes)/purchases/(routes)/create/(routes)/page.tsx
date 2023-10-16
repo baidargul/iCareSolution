@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { ComboBox_SelectCategoryType } from '../components/ComboBox_SelectCategoryType'
+import { ComboBox_SelectCategoryType } from '../components/ComboBox_SelectObjectType'
 
 type Props = {}
 
