@@ -52,6 +52,7 @@ interface ComboBoxProps {
   disabled?: boolean
   options?: any
   side?: Sides
+  defaultValue?: string
 }
 
 export function ComboBoxSelect(props: ComboBoxProps) {
@@ -67,8 +68,17 @@ export function ComboBoxSelect(props: ComboBoxProps) {
 
   if (props.options) statuses = props.options
 
+
+
+  React.useEffect(() => {
+    if (props.defaultValue) {
+      const defaultStatus = statuses.find((status) => status.label === props.defaultValue)
+      if(defaultStatus) setSelectedStatus(defaultStatus)
+    }
+  }, [])
+
   return (
-    <ToolTipProvider value={selectedStatus?.value ? selectedStatus.value : props.prompt}>
+    <ToolTipProvider value={selectedStatus?.value ? selectedStatus.label : props.prompt}>
       <div className="flex items-center space-x-4">
         <p className="text-sm text-muted-foreground">{props.title ? props.title : 'Object type:'}</p>
         <Popover open={open} onOpenChange={setOpen}>

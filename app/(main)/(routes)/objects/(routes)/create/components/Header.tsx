@@ -1,9 +1,10 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
 import RouteBackButton from './RouteBackButton'
 import HeaderControls from './HeaderControls'
 import HeaderActions from './HeaderActions'
+import { useCreateObject } from '@/hooks/useCreateObjectForm'
 
 type Props = {
     newObjectIndex?: number | undefined
@@ -12,26 +13,36 @@ type Props = {
 
 const ObjectCreateHeader = (props: Props) => {
     const [isDoing, setIsDoing] = React.useState(false)
+    const [id, setId] = React.useState('' as string)
     const [name, setName] = React.useState('')
     const [description, setDescription] = React.useState('')
     const [objectType, setObjectType] = React.useState('FIXED' as string)
     const [selectedCategory, setSelectedCategory] = React.useState('' as string)
+    const object: any = useCreateObject()
+
+    useEffect(() => {
+        object.setObjectValues(id, name, description, objectType, selectedCategory)
+    }, [id, name, description, objectType, selectedCategory])
+
 
     const DoSave = async () => {
         setIsDoing(true)
-        const object = {
-            name,
-            description,
-            objectType,
-            category: selectedCategory,
-        }
+        // const object = {
+        //     name,
+        //     description,
+        //     objectType,
+        //     category: selectedCategory,
+        // }
 
-        const res = await axios.post('/api/objects', { ...object }).then((res) => {
-            const data = res.data;
-            console.log(data);
-        })
+        // const res = await axios.post('/api/objects', { ...object }).then((res) => {
+        //     const data = res.data;
+        //     setId(data.data.id)
+        //     console.log(data);
+        // })
 
-        console.log('object', object)
+        // console.log('object', object)
+        console.log(object.object)
+        console.log(object.properties)
         setIsDoing(false)
     }
 
@@ -48,7 +59,7 @@ const ObjectCreateHeader = (props: Props) => {
     }
 
     const propForwarder = {
-        name, setName, description, setDescription, objectType, setObjectType, availableCategories: props.availableCategories, setSelectedCategory, isDoing, DoSave, DoDelete
+        name, setName, description, setDescription, objectType, setObjectType,id, setId, availableCategories: props.availableCategories, setSelectedCategory, isDoing, DoSave, DoDelete
     }
 
 

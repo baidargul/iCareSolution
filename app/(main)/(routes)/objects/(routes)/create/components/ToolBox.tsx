@@ -12,26 +12,26 @@ const ToolBoxObjectCreate = (props: Props) => {
             toolTip: 'Simple text input.',
         },
         {
-            name: 'SELECTSINGLE',
-            value: "TEXT",
+            name: 'Single Selection',
+            value: "SELECTSINGLE",
             icon: <BatteryLow className='w-4 h-4' />,
-            toolTip: 'Select one from options.',
+            toolTip: 'Can only select one from available options.',
         },
         {
             name: 'Multiple Selection',
             value: "SELECTMULTIPLE",
             icon: <BatteryFull className='w-4 h-4' />,
-            toolTip: 'Multiple selection from options.',
+            toolTip: 'Can select multiple available options.',
         },
         {
             name: 'Boolean',
             value: "BOOLEAN",
             icon: <Binary className='w-4 h-4' />,
-            toolTip: 'True or false value.',
+            toolTip: 'Property with only two states: true or false.',
         },
     ]
 
-    
+
     return (
         <div className='bg-theme-Slate min-h-screen w-[15%] p-2 border-r'>
             <p className='text-theme-BlackPointer/70 p-1 pl-2 text-sm '>
