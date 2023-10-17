@@ -33,7 +33,7 @@ const ToolBoxObjectCreate = (props: Props) => {
 
 
     return (
-        <div className='bg-theme-Slate min-h-screen w-[15%] p-2 border-r'>
+        <div className='bg-theme-Slate h-[655px] w-[15%] p-2 border-r'>
             <p className='text-theme-BlackPointer/70 p-1 pl-2 text-sm '>
                 Controls
             </p>

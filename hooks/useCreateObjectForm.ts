@@ -12,6 +12,8 @@ type Object = {
 };
 
 type propertyValues = {
+  id: string;
+  propertyId: string;
   name: string;
   description: string;
   index: number;
@@ -64,6 +66,7 @@ export const useCreateObject = create((set) => ({
           description: description,
           type: type,
           index: index,
+          values: [],
         },
       ],
     }));
@@ -74,6 +77,47 @@ export const useCreateObject = create((set) => ({
       properties: state.properties.filter(
         (property: property) => property.id !== id
       ),
+    }));
+  },
+
+  addValueToProperty(propertyId: string, name: string, description: string) {
+    if(!name) return
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: [
+              ...property.values,
+              {
+                id: v4(),
+                propertyId: propertyId,
+                name: name.toLocaleUpperCase(),
+                description: description,
+                index: property.values.length + 1,
+                isDefault: false,
+              },
+            ],
+          };
+        }
+        return property;
+      }),
+    }));
+  },
+
+  removeValueFromProperty(propertyId: string, id: string) {
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.filter(
+              (value: propertyValues) => value.id !== id
+            ),
+          };
+        }
+        return property;
+      }),
     }));
   },
 
@@ -107,7 +151,7 @@ export const useCreateObject = create((set) => ({
     set((state: any) => {
       const properties = state.properties;
 
-      if (index === 0) return state; // No need to move if it's already at the top
+      if (index === 1) return state; // No need to move if it's already at the top
 
       // Create a copy of the properties array with the updated indices
       const updatedProperties = properties.map((property: property) => {
@@ -126,7 +170,7 @@ export const useCreateObject = create((set) => ({
   movePropertyIndexDown(id: string, index: number) {
     set((state: any) => {
       const properties = state.properties;
-      if (index >= properties.length - 1) return state; // No need to move if it's already at the bottom
+      if (index >= properties.length ) return state; // No need to move if it's already at the bottom
 
       // Create a copy of the properties array with the updated indices
       const updatedProperties = properties.map((property: property) => {

@@ -67,7 +67,7 @@ const NavigationMenuSideBar = () => {
     }
 
     return (
-        <ScrollArea className="bg-theme-Slate min-h-screen w-56 select-none">
+        <ScrollArea className="bg-theme-Slate h-[750px] w-56 select-none">
             <div className="py-4 flex flex-col gap-4">
                 {
                     options.map((option, index) => {

@@ -17,7 +17,7 @@ export const ToolBoxControl = (props: Props) => {
 
     const handleToolClick = () => {
         const newIndex = objectRef.properties.length + 1
-        objectRef.createProperty(`${props.tool.name}`, "Description", props.tool.value, newIndex)
+        objectRef.createProperty(``, "", props.tool.value, newIndex)
     }
 
     return (

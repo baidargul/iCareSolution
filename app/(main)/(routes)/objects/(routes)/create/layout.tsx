@@ -26,13 +26,12 @@ const ObjectsCreateLayout = async ({ children }: { children: React.ReactNode }) 
     })
 
     return (
-        <div className="w-full min-h-screen  bg-theme-Secondry select-none flex flex-col justify-between">
+        <div className="w-full h-[760px] overflow-hidden bg-theme-Secondry select-none flex flex-col justify-between">
             <ObjectCreateHeader newObjectIndex={newObjectIndex} availableCategories={availableCategories} />
             <div className="flex w-full">
                 <ToolBoxObjectCreate />
                 {children}
             </div>
-            <ObjectCreateFooter />
         </div>
     );
 }
