@@ -1,6 +1,6 @@
 import { PropertyTypes } from '@prisma/client';
 import React, { useEffect, useState } from 'react'
-import { Trash, ArrowBigDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Trash, ArrowUp, ArrowDown, Check, CheckCheck, TextCursorInput, Binary, Info } from 'lucide-react';
 import ToolTipProvider from '@/components/ToolTip/ToolTipProvider';
 import { Input } from '@/components/ui/input';
 import { ComboBoxSelect } from '@/components/ComboBox/ComboBoxSelect';
@@ -62,9 +62,14 @@ const PropertyHolder = (props: Props) => {
         <div className='p-2 bg-theme-Slate rounded border border-theme-Primary/30'>
             <div className='flex justify-between items-center gap-4'>
                 <div className='w-full flex flex-col gap-2'>
-                    <ToolTipProvider value={`Position: ${property.index}`}>
-                        <div className='text-xs  font-semibold opacity-30 rounded-md w-fit'>
-                            Property {property.index}
+                    <ToolTipProvider value={`Priority: ${property.index}`}>
+                        <div className='text-xs flex gap-1 items-center font-semibold opacity-30 rounded-md w-fit'>
+                            <p>
+                                {GetPropertyIcon(property)}
+                            </p>
+                            <p>
+                                Property {property.index}
+                            </p>
                         </div>
                     </ToolTipProvider>
                     <div className='flex gap-2'>
@@ -81,7 +86,7 @@ const PropertyHolder = (props: Props) => {
                             <Input placeholder={property.description} onChange={(e: any) => { objectRef.changePropertyDescription(property.id, e.target.value) }} />
                         </section>
                         <section className='flex items-center gap-2'>
-                            <ComboBoxSelect defaultValue={property.name} title={`Type:`} prompt='Search property types' options={propertyTypes} setValue={setSelectedProperty} />
+                            <ComboBoxSelect defaultValue={GetPropertyDescription(property)} title={`Type:`} prompt='Search property types' options={propertyTypes} setValue={setSelectedProperty} />
                         </section>
                         <section className='flex items-center gap-2'>
                             {
@@ -130,9 +135,14 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
     switch (property.type) {
         case "TEXT":
             return (
-                <div className='text-xs text-blue-800 w-32'>
-                    No parameters required.
-                </div>
+                <ToolTipProvider value='Text'>
+                    <div className='text-xs text-blue-800 flex gap-1 items-center w-fit'>
+                        <Info className='w-4 h-4' />
+                        <p>
+                            Text
+                        </p>
+                    </div>
+                </ToolTipProvider>
             )
         case 'SELECTSINGLE':
             return (
@@ -163,9 +173,14 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
 
         case 'BOOLEAN':
             return (
-                <div className='text-xs text-blue-800 w-32'>
-                    No parameters required.
+                <ToolTipProvider value='Yes/No'>
+                <div className='text-xs text-blue-800 flex gap-1 items-center w-fit'>
+                    <Info className='w-4 h-4' />
+                    <p>
+                        Boolean
+                    </p>
                 </div>
+                </ToolTipProvider>
             )
 
         default:
@@ -221,4 +236,42 @@ function GetPropertyValues(property: property, objectRef: any) {
         default:
             break;
     }
+}
+
+function GetPropertyIcon(property: property) {
+    switch (property.type) {
+        case "TEXT":
+            return (
+                <TextCursorInput />
+            )
+        case "SELECTSINGLE":
+            return (
+                <Check />
+            )
+
+        case "SELECTMULTIPLE":
+            return (
+                <CheckCheck />
+            )
+        case 'BOOLEAN':
+            return (
+                <Binary />
+            )
+        default:
+            break;
+    }
+}
+
+function GetPropertyDescription(property: property) {
+    switch (property.type) {
+        case "TEXT":
+            return ("Text")
+        case "BOOLEAN":
+            return ("Boolean")
+        case "SELECTSINGLE":
+            return ("Single Selection")
+        case "SELECTMULTIPLE":
+            return ("Multiple Selection")
+    }
+
 }
