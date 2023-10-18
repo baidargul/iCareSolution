@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { Open_Sans } from 'next/font/google'
 import NavigationMenuSideBar from '@/components/sideBars/NavigationMenuSideBar'
 import { cn } from '@/lib/utils'
+import { Toaster } from "sonner"
 
 const font = Open_Sans({ subsets: ['latin'] })
 
@@ -23,6 +24,10 @@ export default function RootLayout({
         <body className={cn(font.className, '')}>
           {/* <NavigationMenuSideBar /> */}
           {children}
+          <div className='select-none'>
+            <Toaster />
+          </div>
+
         </body>
       </html>
     </ClerkProvider>

@@ -5,6 +5,8 @@ import RouteBackButton from './RouteBackButton'
 import HeaderControls from './HeaderControls'
 import HeaderActions from './HeaderActions'
 import { useCreateObject } from '@/hooks/useCreateObjectForm'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 type Props = {
     newObjectIndex?: number | undefined
@@ -19,30 +21,67 @@ const ObjectCreateHeader = (props: Props) => {
     const [objectType, setObjectType] = React.useState('FIXED' as string)
     const [selectedCategory, setSelectedCategory] = React.useState('' as string)
     const object: any = useCreateObject()
+    const router = useRouter()
 
     useEffect(() => {
         object.setObjectValues(id, name, description, objectType, selectedCategory)
     }, [id, name, description, objectType, selectedCategory])
 
+    function resetAll() {
+        
+    }
+
 
     const DoSave = async () => {
         setIsDoing(true)
-        // const object = {
-        //     name,
-        //     description,
-        //     objectType,
-        //     category: selectedCategory,
-        // }
+        const targetObject = object.object
+        const targetProperties = object.properties
 
-        // const res = await axios.post('/api/objects', { ...object }).then((res) => {
-        //     const data = res.data;
-        //     setId(data.data.id)
-        //     console.log(data);
-        // })
+        if (targetObject.name.length < 1) {
+            setIsDoing(false)
+            toast.error(`Warning!`, { description: "Please enter a name for the object" })
+            return
+        }
 
-        // console.log('object', object)
-        console.log(object.object)
-        console.log(object.properties)
+        if (targetObject.type.length < 1) {
+            setIsDoing(false)
+            toast.error(`Warning!`, { description: "Please select an object type" })
+            return
+        }
+
+        if (targetObject.category.length < 1) {
+            setIsDoing(false)
+            toast.error(`Warning!`, { description: "Please select an object category" })
+            return
+        }
+
+        if (targetProperties.length < 1) {
+            setIsDoing(false)
+            toast.error(`Warning!`, { description: "Please add at least one property" })
+            return
+        }
+
+        const product = {
+            name,
+            description,
+            objectType,
+            category: selectedCategory,
+            properties: targetProperties
+        }
+
+        await axios.post('/api/objects', { ...product }).then((res) => {
+            const data = res.data;
+            if (data.status != 200) {
+                toast.error(`Error!`, { description: data.message })
+                return
+            } else {
+                setId(data.data.id)
+                toast.success(`Success!`, { description: data.message })
+                router.refresh()
+            }
+        })
+
+
         setIsDoing(false)
     }
 
@@ -59,7 +98,7 @@ const ObjectCreateHeader = (props: Props) => {
     }
 
     const propForwarder = {
-        name, setName, description, setDescription, objectType, setObjectType,id, setId, availableCategories: props.availableCategories, setSelectedCategory, isDoing, DoSave, DoDelete
+        name, setName, description, setDescription, objectType, setObjectType, id, setId, availableCategories: props.availableCategories, setSelectedCategory, isDoing, DoSave, DoDelete
     }
 
 

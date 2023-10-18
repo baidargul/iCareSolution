@@ -42,18 +42,22 @@ model objectProperties {
 }
 
 model objects {
-  id          String @id @default(uuid())
+  id          String      @id @default(uuid())
   categoryId  String
   name        String
   description String
-  type ObjectTypes
+  type        ObjectTypes
+  property    property[]
 }
 
 model property {
-  id          String  @id @default(uuid())
-  name        String  @unique
-  description String?
-  type        PropertyTypes
+  id             String           @id @default(uuid())
+  name           String           @unique
+  description    String?
+  type           PropertyTypes
+  objectId       String
+  objects        objects          @relation(fields: [objectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  propertyValues propertyValues[]
 }
 
 model purchaseRegister {
@@ -64,11 +68,12 @@ model purchaseRegister {
 }
 
 model propertyValues {
-  id          String @id @default(uuid())
+  id          String   @id @default(uuid())
   propertyId  String
   name        String
   description String
   index       Int?
+  property    property @relation(fields: [propertyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum Role {
@@ -85,6 +90,7 @@ enum PropertyTypes {
   SELECTMULTIPLE
   BOOLEAN
 }
+
 enum ObjectTypes {
   FIXED
   VARIANT
