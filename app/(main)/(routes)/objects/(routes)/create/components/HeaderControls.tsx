@@ -37,10 +37,10 @@ export default function HeaderControls({ props }: any) {
                 <Input disabled={props.isDoing} placeholder='Description' onChange={(e): any => props.setDescription(e.target.value)} value={props.description} />
             </section>
             <section className='flex items-center gap-2'>
-                <ComboBoxSelect disabled={props.isDoing} title='Object type:' prompt='Search object types' setValue={props.setObjectType} options={objectTypeOptions} />
+                <ComboBoxSelect disabled={props.isDoing} title='Object type:' prompt='Search object types, Default: FIXED' setValue={props.setObjectType} value={props.value} options={objectTypeOptions} />
             </section>
             <section className='flex items-center gap-2'>
-                <ComboBoxSelect disabled={props.isDoing} title='Category:' prompt='Search category' setValue={props.setSelectedCategory} options={props.availableCategories} />
+                <ComboBoxSelect disabled={props.isDoing} title='Category:' prompt='Search category' setValue={props.setSelectedCategory} value={props.value} options={props.availableCategories} />
             </section>
         </div>
     )

@@ -53,6 +53,7 @@ interface ComboBoxProps {
   options?: any
   side?: Sides
   defaultValue?: string
+  value?: string
 }
 
 export function ComboBoxSelect(props: ComboBoxProps) {
@@ -73,7 +74,7 @@ export function ComboBoxSelect(props: ComboBoxProps) {
   React.useEffect(() => {
     if (props.defaultValue) {
       const defaultStatus = statuses.find((status) => status.label === props.defaultValue)
-      if(defaultStatus) setSelectedStatus(defaultStatus)
+      if (defaultStatus) setSelectedStatus(defaultStatus)
     }
   }, [])
 
@@ -95,7 +96,7 @@ export function ComboBoxSelect(props: ComboBoxProps) {
                   {selectedStatus.label}
                 </>
               ) : (
-                <>{selectedStatus ? selectedStatus : '...'}</>
+                <>{selectedStatus ? selectedStatus : props.value ? props.value : '...'}</>
               )}
             </Button>
           </PopoverTrigger>

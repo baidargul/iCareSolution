@@ -79,7 +79,6 @@ const ObjectCreateHeader = (props: Props) => {
                 toast.error(`Error!`, { description: data.message })
                 return
             } else {
-                // setId(data.data.id)
                 toast.success(`Success!`, { description: data.message })
                 resetAll()
             }
@@ -101,7 +100,7 @@ const ObjectCreateHeader = (props: Props) => {
     }
 
     const propForwarder = {
-        name, setName, description, setDescription, objectType, setObjectType, id, setId, availableCategories: props.availableCategories, setSelectedCategory, isDoing, DoSave, DoDelete
+        name, setName, description, setDescription, value:selectedCategory, objectType, setObjectType, id, setId, availableCategories: props.availableCategories, setSelectedCategory, isDoing, DoSave, DoDelete
     }
 
 
