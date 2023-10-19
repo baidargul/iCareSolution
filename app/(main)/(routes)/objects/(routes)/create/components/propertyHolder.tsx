@@ -1,5 +1,5 @@
 import { PropertyTypes } from '@prisma/client';
-import React, { useEffect, useState } from 'react'
+import React, { KeyboardEventHandler, useEffect, useState } from 'react'
 import { Trash, ArrowUp, ArrowDown, Check, CheckCheck, TextCursorInput, Binary, Info } from 'lucide-react';
 import ToolTipProvider from '@/components/ToolTip/ToolTipProvider';
 import { Input } from '@/components/ui/input';
@@ -32,6 +32,7 @@ const PropertyHolder = (props: Props) => {
     const property = props.property
     const [selectedProperty, setSelectedProperty] = useState<string>(property.type)
     const [currentValue, setCurrentValue] = useState<string>('')
+    const [isHover, setIsHover] = useState<string>('')
     const objectRef: any = useCreateObject();
 
     useEffect(() => {
@@ -95,7 +96,7 @@ const PropertyHolder = (props: Props) => {
                         </section>
                     </div>
                     {
-                        GetPropertyValues(property, objectRef)
+                        GetPropertyValues(property, objectRef, isHover, setIsHover)
                     }
                 </div>
                 <div className='flex flex-col gap-1 w-fit'>
@@ -232,7 +233,7 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
     }
 }
 
-function GetPropertyValues(property: property, objectRef: any) {
+function GetPropertyValues(property: property, objectRef: any, isHover: any, setIsHover: any) {
     function handleRemoveEvent(propertyId: string, id: string) {
         objectRef.removeValueFromProperty(propertyId, id)
     }
@@ -243,15 +244,25 @@ function GetPropertyValues(property: property, objectRef: any) {
         case 'SELECTSINGLE':
             return (
                 <div className='w-full border-2 border-theme-Primary/30  border-dashed rounded p-2'>
-                    <div className='grid grid-cols-6 gap-2'>
+                    <div className='grid grid-cols-6 gap-2 justify-items-center'>
                         {
                             property.values.map((value, index) => {
                                 return (
-                                    <ToolTipProvider key={index} value={`${value.name} (Click to remove this value)`}>
-                                        <div onClick={() => { handleRemoveEvent(property.id, value.id) }} className='w-36 bg-theme-Secondry/70 p-1 text-center text-black hover:bg-red-400 hover:text-white cursor-pointer transition-all rounded overflow-hidden text-ellipsis'>
+                                    <button className='relative ' key={index} onClick={() => setIsHover(value.id)} onBlur={() => setIsHover('')} onKeyDown={(e) => e.key === "Enter" || e.key === "Escape" ? setIsHover('') : null}>
+                                        <div className='w-36 bg-theme-Secondry/70 p-1 text-center text-black hover:bg-theme-Secondry/50  cursor-pointer transition-all rounded overflow-hidden text-ellipsis'>
                                             {value.name}
                                         </div>
-                                    </ToolTipProvider>
+                                        <div className={`p-2  ${isHover === value.id ? "block" : "hidden"} justify-center items-center  mt-1 rounded-md drop-shadow-sm border-slate-400 border absolute bg-theme-Slate w-full`}>
+                                            <div className='text-sm font-semibold opacity-60'>
+                                                Actions
+                                            </div>
+                                            <div className='border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2'>
+                                                <ToolTipProvider key={index} value={`Remove`}>
+                                                    <Trash className=' text-theme-BlackPointer/80' onClick={() => { handleRemoveEvent(property.id, value.id) }} />
+                                                </ToolTipProvider>
+                                            </div>
+                                        </div>
+                                    </button>
                                 )
                             })
                         }
@@ -261,25 +272,25 @@ function GetPropertyValues(property: property, objectRef: any) {
         case 'SELECTMULTIPLE':
             return (
                 <div className='w-full border-2 border-theme-Primary/30  border-dashed rounded p-2'>
-                    <div className='grid grid-cols-6 gap-2'>
+                    <div className='grid grid-cols-6 gap-2 justify-items-center'>
                         {
                             property.values.map((value, index) => {
                                 return (
-                                    <ToolTipProvider key={index} value={`${value.name} (Click to remove this value)`}>
-                                        <div className='relative '>
-                                            <div onClick={() => { handleRemoveEvent(property.id, value.id) }} className='w-36 peer bg-theme-Secondry/70 p-1 text-center text-black hover:bg-red-400 hover:text-white cursor-pointer transition-all rounded overflow-hidden text-ellipsis'>
-                                                {value.name}
+                                    <button className='relative ' key={index} onClick={() => setIsHover(value.id)} onBlur={() => setIsHover('')} onKeyDown={(e) => e.key === "Enter" || e.key === "Escape" ? setIsHover('') : null}>
+                                        <div className='w-36 bg-theme-Secondry/70 p-1 text-center text-black hover:bg-theme-Secondry/50  cursor-pointer transition-all rounded overflow-hidden text-ellipsis'>
+                                            {value.name}
+                                        </div>
+                                        <div className={`p-2  ${isHover === value.id ? "block" : "hidden"} justify-center items-center  mt-1 rounded-md drop-shadow-sm border-slate-400 border absolute bg-theme-Slate w-full`}>
+                                            <div className='text-sm font-semibold opacity-60'>
+                                                Actions
                                             </div>
-                                            <div className='p-2 justify-center items-center  mt-1 rounded-md drop-shadow-sm border-slate-400 border absolute hidden peer-hover:block bg-theme-Slate w-full'>
-                                                <div className='text-sm font-semibold opacity-60'>
-                                                    Actions
-                                                </div>
-                                                <div className='border border-theme-Primary rounded-md w-fit p-1 mt-2'>
-                                                    <Trash className=' text-theme-Primary' />
-                                                </div>
+                                            <div className='border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2'>
+                                                <ToolTipProvider key={index} value={`Remove`}>
+                                                    <Trash className=' text-theme-BlackPointer/80' onClick={() => { handleRemoveEvent(property.id, value.id) }} />
+                                                </ToolTipProvider>
                                             </div>
                                         </div>
-                                    </ToolTipProvider>
+                                    </button>
                                 )
                             })
                         }
