@@ -6,7 +6,6 @@ type Props = {}
 
 const ObjectSummary = (props: Props) => {
     const objectRef: any = useCreateObject()
-
     return (
         <div className='text-xs'>
             <div className='flex gap-1'>

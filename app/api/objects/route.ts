@@ -71,7 +71,8 @@ export async function POST(req: Request) {
 
     if (object.length !== 0) {
       response.status = 400;
-      response.message = "Object already exists, in this category with same type and name.";
+      response.message =
+        "Object already exists, in this category with same type and name.";
       response.data = null;
       return new NextResponse(JSON.stringify(response));
     }
@@ -95,7 +96,9 @@ export async function POST(req: Request) {
         },
       });
 
-      property.values.forEach(async (value: any) => {
+      if (property.type === "TEXT") {
+        const lastValueIndex = property.values.length - 1;
+        const value = property.values[lastValueIndex];
         await prisma.propertyValues.create({
           data: {
             id: value.id,
@@ -105,7 +108,19 @@ export async function POST(req: Request) {
             index: value.index,
           },
         });
-      });
+      } else {
+        property.values.forEach(async (value: any) => {
+          await prisma.propertyValues.create({
+            data: {
+              id: value.id,
+              propertyId: newProperty.id,
+              name: value.name.toUpperCase(),
+              description: value.description,
+              index: value.index,
+            },
+          });
+        });
+      }
     });
 
     response.status = 200;

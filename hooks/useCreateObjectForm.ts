@@ -155,6 +155,22 @@ export const useCreateObject = create((set) => ({
     }));
   },
 
+  updatePropertyValue(propertyId: string, id: string, name: string) {
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.map((value: propertyValues) =>
+              value.id === id ? { ...value, name: name } : value
+            ),
+          };
+        }
+        return property;
+      }),
+    }));
+  },
+
   movePropertyIndexUp(id: string, index: number) {
     set((state: any) => {
       const properties = state.properties;

@@ -132,17 +132,61 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
         setCurrentValue('')
     }
 
+    function handleTextValue(value: string) {
+        setCurrentValue(value)
+        const valueId = objectRef.properties.values[0]?.id
+        if (valueId) {
+            objectRef.updatePropertyValue(objectRef.object.id, valueId, value)
+        } else {
+            objectRef.addValueToProperty(property.id, value, "")
+        }
+        
+        setCurrentValue('')
+    }
+
+    const inputOptions = [
+        {
+            value: 'TEXT',
+            label: 'Text'
+        },
+        {
+            value: 'NUMBER',
+            label: 'Number'
+        },
+        {
+            value: 'DATE',
+            label: 'Date'
+        },
+        {
+            value: 'TIME',
+            label: 'Time'
+        },
+        {
+            value: 'DATETIME',
+            label: 'Date & Time'
+        },
+        {
+            value: 'EMAIL',
+            label: 'Email'
+        },
+        {
+            value: 'PHONE',
+            label: 'Phone'
+        },
+        {
+            value: 'URL',
+            label: 'URL'
+        },
+    ]
+
     switch (property.type) {
         case "TEXT":
             return (
-                <ToolTipProvider value='Text'>
-                    <div className='text-xs text-blue-800 flex gap-1 items-center w-fit'>
-                        <Info className='w-4 h-4' />
-                        <p>
-                            Text
-                        </p>
+                <>
+                    <div className='flex items-center gap-2'>
+                        <ComboBoxSelect title='Format:' options={inputOptions} prompt='Input types' setValue={handleTextValue} />
                     </div>
-                </ToolTipProvider>
+                </>
             )
         case 'SELECTSINGLE':
             return (
@@ -174,12 +218,12 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
         case 'BOOLEAN':
             return (
                 <ToolTipProvider value='Yes/No'>
-                <div className='text-xs text-blue-800 flex gap-1 items-center w-fit'>
-                    <Info className='w-4 h-4' />
-                    <p>
-                        Boolean
-                    </p>
-                </div>
+                    <div className='text-xs text-blue-800 flex gap-1 items-center w-fit'>
+                        <Info className='w-4 h-4' />
+                        <p>
+                            Boolean
+                        </p>
+                    </div>
                 </ToolTipProvider>
             )
 

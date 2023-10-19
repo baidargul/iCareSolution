@@ -96,7 +96,7 @@ export function ComboBoxSelect(props: ComboBoxProps) {
                   {selectedStatus.label}
                 </>
               ) : (
-                <>{selectedStatus ? selectedStatus : props.value ? props.value : '...'}</>
+                <>{selectedStatus ? selectedStatus : '...'}</>
               )}
             </Button>
           </PopoverTrigger>
