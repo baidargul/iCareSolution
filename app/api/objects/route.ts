@@ -23,6 +23,8 @@ export async function POST(req: Request) {
     let { name, description, objectType, category, properties } =
       await req.json();
 
+      console.log(properties)
+
     if (!name) {
       response.status = 400;
       response.message = "Name is required";

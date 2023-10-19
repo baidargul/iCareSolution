@@ -15,7 +15,7 @@ const ObjectSummary = (props: Props) => {
                 </p>
                 <p>
                     {
-                        objectRef.properties.length
+                        objectRef?.properties.length || 0
                     }
                 </p>
             </div>

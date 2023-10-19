@@ -72,6 +72,14 @@ export const useCreateObject = create((set) => ({
     }));
   },
 
+  clearProperties() {
+    set(() => ({ properties: [] }));
+  },
+
+  clearObject() {
+    set(() => ({ object: {} }));
+  },
+
   removeProperty(id: string) {
     set((state: any) => ({
       properties: state.properties.filter(
@@ -81,7 +89,7 @@ export const useCreateObject = create((set) => ({
   },
 
   addValueToProperty(propertyId: string, name: string, description: string) {
-    if(!name) return
+    if (!name) return;
     set((state: any) => ({
       properties: state.properties.map((property: property) => {
         if (property.id === propertyId) {
@@ -170,7 +178,7 @@ export const useCreateObject = create((set) => ({
   movePropertyIndexDown(id: string, index: number) {
     set((state: any) => {
       const properties = state.properties;
-      if (index >= properties.length ) return state; // No need to move if it's already at the bottom
+      if (index >= properties.length) return state; // No need to move if it's already at the bottom
 
       // Create a copy of the properties array with the updated indices
       const updatedProperties = properties.map((property: property) => {
@@ -185,4 +193,5 @@ export const useCreateObject = create((set) => ({
       return { properties: updatedProperties };
     });
   },
+
 }));

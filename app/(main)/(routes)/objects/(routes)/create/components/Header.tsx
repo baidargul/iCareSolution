@@ -7,7 +7,6 @@ import HeaderActions from './HeaderActions'
 import { useCreateObject } from '@/hooks/useCreateObjectForm'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-
 type Props = {
     newObjectIndex?: number | undefined
     availableCategories: any
@@ -28,7 +27,12 @@ const ObjectCreateHeader = (props: Props) => {
     }, [id, name, description, objectType, selectedCategory])
 
     function resetAll() {
-        
+        setIsDoing(false)
+        setId('')
+        setName('')
+        setDescription('')
+        object.clearProperties()
+        object.clearObject()
     }
 
 
@@ -75,13 +79,12 @@ const ObjectCreateHeader = (props: Props) => {
                 toast.error(`Error!`, { description: data.message })
                 return
             } else {
-                setId(data.data.id)
+                // setId(data.data.id)
                 toast.success(`Success!`, { description: data.message })
-                router.refresh()
+                resetAll()
             }
         })
-
-
+      
         setIsDoing(false)
     }
 
