@@ -81,9 +81,10 @@ const ObjectCreateHeader = (props: Props) => {
             } else {
                 toast.success(`Success!`, { description: data.message })
                 resetAll()
+                router.refresh()
             }
         })
-      
+
         setIsDoing(false)
     }
 
@@ -100,7 +101,7 @@ const ObjectCreateHeader = (props: Props) => {
     }
 
     const propForwarder = {
-        name, setName, description, setDescription, value:selectedCategory, objectType, setObjectType, id, setId, availableCategories: props.availableCategories, setSelectedCategory, isDoing, DoSave, DoDelete
+        name, setName, description, setDescription, value: selectedCategory, objectType, setObjectType, id, setId, availableCategories: props.availableCategories, setSelectedCategory, isDoing, DoSave, DoDelete
     }
 
 

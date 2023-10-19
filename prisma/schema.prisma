@@ -52,11 +52,11 @@ model objects {
 
 model property {
   id             String           @id @default(uuid())
-  name           String           @unique
+  name           String           
   description    String?
   type           PropertyTypes
   objectId       String
-  objects        objects          @relation(fields: [objectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  objects        objects          @relation(fields: [objectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   propertyValues propertyValues[]
 }
 
@@ -73,7 +73,7 @@ model propertyValues {
   name        String
   description String
   index       Int?
-  property    property @relation(fields: [propertyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  property    property @relation(fields: [propertyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 enum Role {
