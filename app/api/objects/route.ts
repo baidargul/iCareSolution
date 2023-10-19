@@ -86,6 +86,28 @@ export async function POST(req: Request) {
       },
     });
 
+    let duplicatePropertiesCounter = 0;
+    const duplicates = [] as string[];
+    properties.forEach(async (property: any) => {
+      const ID = await prisma.property.findMany({
+        where: {
+          name: property.name.toUpperCase(),
+          objectId: newObject.id,
+        },
+      });
+      if (ID.length > 0) {
+        duplicatePropertiesCounter++;
+        duplicates.push(property.name);
+      }
+    });
+
+    if (duplicatePropertiesCounter > 0) {
+      response.status = 400;
+      response.message = `Properties already exists in this object: ${duplicates}`;
+      response.data = null;
+      return new NextResponse(JSON.stringify(response));
+    }
+
     properties.forEach(async (property: any) => {
       const newProperty = await prisma.property.create({
         data: {
