@@ -101,12 +101,12 @@ const PropertyHolder = (props: Props) => {
                 </div>
                 <div className='flex flex-col gap-1 w-fit'>
                     <ToolTipProvider value='Move up'>
-                        <div onClick={() => objectRef.movePropertyIndexUp(property.id, property.index)} className='cursor-pointer flex items-center justify-center w-6 h-6 bg-blue-100/30 border-2 border-blue-800 p-1 rounded-full'>
+                        <div onClick={() => objectRef.movePropertyIndexUp(property.id, property.index)} className={`${property.index === 1 ? "invisible" : "visible"} cursor-pointer flex items-center justify-center w-6 h-6 bg-blue-100/30 border-2 border-blue-800 p-1 rounded-full`}>
                             <ArrowUp className='w-4 h-4  text-blue-800  hover:scale-75 transition-all ' />
                         </div>
                     </ToolTipProvider>
                     <ToolTipProvider value='Move down'>
-                        <div onClick={() => objectRef.movePropertyIndexDown(property.id, property.index)} className='cursor-pointer flex items-center justify-center w-6 h-6 bg-blue-100/30 border-2 border-blue-800 p-1 rounded-full'>
+                        <div onClick={() => objectRef.movePropertyIndexDown(property.id, property.index)} className={`${property.index === objectRef.properties.length ? "hidden" : "block"} cursor-pointer flex items-center justify-center w-6 h-6 bg-blue-100/30 border-2 border-blue-800 p-1 rounded-full`}>
                             <ArrowDown className='w-4 h-4  text-blue-800  hover:scale-75 transition-all ' />
                         </div>
                     </ToolTipProvider>
@@ -290,12 +290,12 @@ function GetPropertyValues(property: property, objectRef: any, isHover: any, set
                                                         <Trash onClick={() => { handleRemoveEvent(property.id, value.id) }} className=' text-theme-BlackPointer/80' />
                                                     </ToolTipProvider>
                                                 </div>
-                                                <div className='border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2'>
+                                                <div className={`${value.index === 1 ? "hidden" : "block"} border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2`}>
                                                     <ToolTipProvider value={`Shift Left`}>
                                                         <ArrowLeft onClick={() => { setIsHover(false); objectRef.movePropertyValueIndexUp(property.id, value.id, value.index); }} className=' text-theme-BlackPointer/80' />
                                                     </ToolTipProvider>
                                                 </div>
-                                                <div className='border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2'>
+                                                <div className={`${value.index === property.values.length ? "hidden" : "block"} border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2`}>
                                                     <ToolTipProvider value={`Shift Right`}>
                                                         <ArrowRight onClick={() => { setIsHover(false); objectRef.movePropertyValueIndexDown(property.id, value.id, value.index); }} className=' text-theme-BlackPointer/80' />
                                                     </ToolTipProvider>
