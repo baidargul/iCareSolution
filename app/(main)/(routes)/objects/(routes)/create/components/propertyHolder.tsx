@@ -140,7 +140,7 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
         } else {
             objectRef.addValueToProperty(property.id, value, "")
         }
-        
+
         setCurrentValue('')
     }
 
@@ -266,8 +266,18 @@ function GetPropertyValues(property: property, objectRef: any) {
                             property.values.map((value, index) => {
                                 return (
                                     <ToolTipProvider key={index} value={`${value.name} (Click to remove this value)`}>
-                                        <div onClick={() => { handleRemoveEvent(property.id, value.id) }} className='w-36 bg-theme-Secondry/70 p-1 text-center text-black hover:bg-red-400 hover:text-white cursor-pointer transition-all rounded overflow-hidden text-ellipsis'>
-                                            {value.name}
+                                        <div className='relative '>
+                                            <div onClick={() => { handleRemoveEvent(property.id, value.id) }} className='w-36 peer bg-theme-Secondry/70 p-1 text-center text-black hover:bg-red-400 hover:text-white cursor-pointer transition-all rounded overflow-hidden text-ellipsis'>
+                                                {value.name}
+                                            </div>
+                                            <div className='p-2 justify-center items-center  mt-1 rounded-md drop-shadow-sm border-slate-400 border absolute hidden peer-hover:block bg-theme-Slate w-full'>
+                                                <div className='text-sm font-semibold opacity-60'>
+                                                    Actions
+                                                </div>
+                                                <div className='border border-theme-Primary rounded-md w-fit p-1 mt-2'>
+                                                    <Trash className=' text-theme-Primary' />
+                                                </div>
+                                            </div>
                                         </div>
                                     </ToolTipProvider>
                                 )
