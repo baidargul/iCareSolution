@@ -1,6 +1,6 @@
 import { PropertyTypes } from '@prisma/client';
-import React, { KeyboardEventHandler, useEffect, useState } from 'react'
-import { Trash, ArrowUp, ArrowDown, Check, CheckCheck, TextCursorInput, Binary, Info } from 'lucide-react';
+import React, { useEffect, useState } from 'react'
+import { Trash, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Check, CheckCheck, TextCursorInput, Binary, Info } from 'lucide-react';
 import ToolTipProvider from '@/components/ToolTip/ToolTipProvider';
 import { Input } from '@/components/ui/input';
 import { ComboBoxSelect } from '@/components/ComboBox/ComboBoxSelect';
@@ -284,11 +284,23 @@ function GetPropertyValues(property: property, objectRef: any, isHover: any, set
                                             <div className='text-sm font-semibold opacity-60'>
                                                 Actions
                                             </div>
-                                            <div className='border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2'>
-                                                <ToolTipProvider key={index} value={`Remove`}>
-                                                    <Trash className=' text-theme-BlackPointer/80' onClick={() => { handleRemoveEvent(property.id, value.id) }} />
-                                                </ToolTipProvider>
-                                            </div>
+                                            <section className='flex justify-evenly items-center gap-2'>
+                                                <div className='border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2'>
+                                                    <ToolTipProvider value={`Remove`}>
+                                                        <Trash onClick={() => { handleRemoveEvent(property.id, value.id) }} className=' text-theme-BlackPointer/80' />
+                                                    </ToolTipProvider>
+                                                </div>
+                                                <div className='border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2'>
+                                                    <ToolTipProvider value={`Shift Left`}>
+                                                        <ArrowLeft onClick={() => { setIsHover(false); objectRef.movePropertyValueIndexUp(property.id, value.id, value.index); }} className=' text-theme-BlackPointer/80' />
+                                                    </ToolTipProvider>
+                                                </div>
+                                                <div className='border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2'>
+                                                    <ToolTipProvider value={`Shift Right`}>
+                                                        <ArrowRight onClick={() => { setIsHover(false); objectRef.movePropertyValueIndexDown(property.id, value.id, value.index); }} className=' text-theme-BlackPointer/80' />
+                                                    </ToolTipProvider>
+                                                </div>
+                                            </section>
                                         </div>
                                     </button>
                                 )

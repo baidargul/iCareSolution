@@ -210,4 +210,75 @@ export const useCreateObject = create((set) => ({
     });
   },
 
+  movePropertyValueIndexUp(propertyId: string, id: string, index: number) {
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.map((value: propertyValues) => {
+              if (value.index === index - 1) {
+                return { ...value, index: value.index + 1 };
+              } else if (value.id === id && value.index === index) {
+                return { ...value, index: value.index - 1 };
+              }
+              return value;
+            }),
+          };
+        }
+        return property;
+      }),
+    }));
+
+    //sort values array
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.sort(
+              (a: propertyValues, b: propertyValues) => a.index - b.index
+            ),
+          };
+        }
+        return property;
+      }),
+    }));
+  },
+
+  movePropertyValueIndexDown(propertyId: string, id: string, index: number) {
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.map((value: propertyValues) => {
+              if (value.index === index + 1) {
+                return { ...value, index: value.index - 1 };
+              } else if (value.id === id && value.index === index) {
+                return { ...value, index: value.index + 1 };
+              }
+              return value;
+            }),
+          };
+        }
+        return property;
+      }),
+    }));
+
+    //sort values array
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.sort(
+              (a: propertyValues, b: propertyValues) => a.index - b.index
+            ),
+          };
+        }
+        return property;
+      }),
+    }));
+  },
 }));
