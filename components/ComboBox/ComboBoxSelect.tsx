@@ -81,7 +81,7 @@ export function ComboBoxSelect(props: ComboBoxProps) {
   return (
     <ToolTipProvider value={selectedStatus?.value ? selectedStatus.label : props.prompt}>
       <div className="flex items-center space-x-4">
-        <p className="text-sm text-muted-foreground">{props.title ? props.title : 'Object type:'}</p>
+        <p className={`text-sm text-muted-foreground ${props.title ? "block" : "hidden"}`}>{props.title ? props.title : 'Object type:'}</p>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button

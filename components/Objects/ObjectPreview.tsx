@@ -8,6 +8,7 @@ import React from 'react'
 import ToolTipProvider from "../ToolTip/ToolTipProvider"
 import { Separator } from "../ui/separator"
 import { Input } from "../ui/input"
+import { ComboBoxSelect } from "../ComboBox/ComboBoxSelect"
 
 type Props = {
     object: any
@@ -39,7 +40,7 @@ const ObjectPreview = (props: Props) => {
                 <div className='flex gap-2 '>
                     <div className='tracking-wider text-sm font-semibold flex gap-1 items-center'>
                         <ToolTipProvider value={object.type}>
-                            <div className="bg-theme-Primary/10 p-1 rounded-full text-theme-Primary w-6 h-6 flex justify-center items-center">
+                            <div className="bg-theme-Primary/10 p-1 rounded-full text-theme-Primary w-6 h-6 flex justify-center items-center transition-all hover:scale-110 hover:drop-shadow-sm">
                                 {
                                     getObjectType(object)
                                 }
@@ -71,7 +72,7 @@ const ObjectPreview = (props: Props) => {
                                         <div className="text-sm font-semibold leading-tight">
                                             {property.name}:
                                         </div>
-                                        <div>
+                                        <div className="w-full">
                                             {getPropertyTypeControl(property)}
                                         </div>
                                     </div>
@@ -91,15 +92,43 @@ const ObjectPreview = (props: Props) => {
 export default ObjectPreview
 
 function getPropertyTypeControl(property: any) {
-
+    let propertyType: string = ""
 
     switch (property.type) {
         case "TEXT":
-            const propertyType: string = property?.propertyValues[property?.propertyValues?.length - 1].name
+            propertyType = property?.propertyValues[property?.propertyValues?.length - 1].name
             return (
                 <div>
                     <Input className="h-6" placeholder={property.description} type={propertyType} />
                 </div>
+            )
+        case "SELECTSINGLE":
+            return (
+                <select className="border border-slate-200 drop-shadow-sm w-full rounded-md outline-none focus:outline-theme-Primary/30">
+                    {
+                        property?.propertyValues?.map((propertyValue: any) => {
+                            return (
+                                <option className="bg-theme-Primary/5" key={propertyValue.id} value={propertyValue.name}>{propertyValue.name}</option>
+                            )
+                        })
+                    }
+                </select>
+            )
+        case "SELECTMULTIPLE":
+            return (
+                <section>
+                    {
+                        property?.propertyValues?.map((propertyValue: any) => {
+                            return (
+                                <div key={propertyValue.id} className="flex items-center gap-2">
+                                    <input type="checkbox" />
+                                    <label>{propertyValue.name}</label>
+                                </div>
+                            )
+                        })
+                    }
+                </section>
+
             )
 
     }

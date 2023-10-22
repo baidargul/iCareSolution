@@ -22,7 +22,9 @@ class ToolTipProvider extends Component<Props, State> {
                 <Tooltip>
                     <TooltipTrigger asChild>{this.props.children}</TooltipTrigger>
                     <TooltipContent className="text-sm font-normal">
-                        <p>{this.props.value}</p>
+                        {
+                            typeof this.props.value === "string" ? <p>{this.props.value}</p> : this.props.value
+                        }
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>

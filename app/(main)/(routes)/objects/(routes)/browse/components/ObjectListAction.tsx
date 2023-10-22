@@ -66,7 +66,7 @@ function ObjectListAction(props: Props) {
                                             object.type
                                         }
                                     </div>
-                                    <div className='tracking-tighter text-xs uppercase border-b border-theme-BlackPointer'>
+                                    <div className='tracking-tighter text-xs uppercase border-b-2 border-theme-BlackPointer/30 hover:border-t-2 hover:border-b-0 transition-all'>
                                         {
                                             object?.categories?.name
                                         }
