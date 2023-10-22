@@ -1,4 +1,5 @@
 'use client'
+import ToolTipProvider from '@/components/ToolTip/ToolTipProvider'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useBrowseObject } from '@/hooks/useBrowseObject'
 
@@ -56,21 +57,25 @@ function ObjectListAction(props: Props) {
                             console.log(object)
                             return (
                                 <div key={object.id} onClick={() => handleObjectSelection(object)} className={`grid grid-cols-3 items-center justify-items-center ${object.id === objectRef.object?.id ? "bg-theme-Primary/20" : ""} cursor-pointer hover:bg-theme-Primary/10 p-2`}>
-                                    <div className='font-semibold text-xs'>
-                                        {
-                                            object.name
-                                        }
-                                    </div>
+                                    <ToolTipProvider value={object.name}>
+                                        <div className='font-semibold text-xs overflow-hidden text-ellipsis w-16 whitespace-nowrap'>
+                                            {
+                                                object.name
+                                            }
+                                        </div>
+                                    </ToolTipProvider>
                                     <div className='tracking-tighter text-xs uppercase'>
                                         {
                                             object.type
                                         }
                                     </div>
-                                    <div className='tracking-tighter text-xs uppercase border-b-2 border-theme-BlackPointer/30 hover:border-t-2 hover:border-b-0 transition-all'>
-                                        {
-                                            object?.categories?.name
-                                        }
-                                    </div>
+                                    <ToolTipProvider value={object.categories.name}>
+                                        <div className='tracking-tighter overflow-hidden text-ellipsis w-16 whitespace-nowrap text-xs uppercase border-b-2 border-theme-BlackPointer/30 hover:border-t-2 hover:border-b-0 transition-all'>
+                                            {
+                                                object?.categories?.name
+                                            }
+                                        </div>
+                                    </ToolTipProvider>
                                 </div>
                             )
                         })

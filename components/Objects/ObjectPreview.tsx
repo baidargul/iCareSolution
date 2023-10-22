@@ -72,7 +72,7 @@ const ObjectPreview = (props: Props) => {
                                         <div className="text-sm font-semibold leading-tight">
                                             {property.name}:
                                         </div>
-                                        <div className="w-full">
+                                        <div className="w-full flex flex-col justify-center">
                                             {getPropertyTypeControl(property)}
                                         </div>
                                     </div>
@@ -99,7 +99,7 @@ function getPropertyTypeControl(property: any) {
             propertyType = property?.propertyValues[property?.propertyValues?.length - 1].name
             return (
                 <div>
-                    <Input className="h-6" placeholder={property.description} type={propertyType} />
+                    <Input className="h-6 hover:tracking-wide transition-all" placeholder={property.description} type={propertyType} />
                 </div>
             )
         case "SELECTSINGLE":
@@ -131,6 +131,12 @@ function getPropertyTypeControl(property: any) {
 
             )
 
+            case "BOOLEAN":
+                return (
+                    <div className="flex items-center gap-2">
+                        <input type="checkbox" className="scale-125" />
+                    </div>
+                )
     }
 
 }
