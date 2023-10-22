@@ -29,8 +29,9 @@ model purchase {
 }
 
 model categories {
-  id   String @id @default(uuid())
-  name String @unique(map: "name")
+  id      String    @id @default(uuid())
+  name    String    @unique(map: "name")
+  objects objects[]
 }
 
 model objectProperties {
@@ -47,16 +48,18 @@ model objects {
   name        String
   description String
   type        ObjectTypes
+  dateCreated DateTime?   @default(now()) @db.Timestamptz(6)
+  categories  categories  @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   property    property[]
 }
 
 model property {
   id             String           @id @default(uuid())
-  name           String           
+  name           String
   description    String?
   type           PropertyTypes
   objectId       String
-  objects        objects          @relation(fields: [objectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  objects        objects          @relation(fields: [objectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   propertyValues propertyValues[]
 }
 
@@ -73,7 +76,7 @@ model propertyValues {
   name        String
   description String
   index       Int?
-  property    property @relation(fields: [propertyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  property    property @relation(fields: [propertyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum Role {

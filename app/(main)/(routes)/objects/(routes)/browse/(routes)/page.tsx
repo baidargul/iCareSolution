@@ -1,15 +1,21 @@
-'use client'
-
-import { useRouter } from "next/navigation";
+import ObjectPreview from "@/components/Objects/ObjectPreview";
+import ObjectList from "../components/ObjectList";
 
 const ObjectsBrowsePage = () => {
-    const router = useRouter()
     return (
-        <div>
-            List of all avaialble objects
-            <button className="bg-theme-Primary text-white p-2 rounded" onClick={() => router.push("/objects/create")}>
-                Create
-            </button>
+        <div className="">
+            <div className="font-semibold text-xl text-theme-BlackPointer mb-10">
+                Objects
+            </div>
+            <div className="flex justify-between items-center gap-2">
+                <div className="bg-white border border-slate-300 rounded p-2 h-[515px] w-72">
+                    <ObjectList />
+                </div>
+
+                <div className="bg-white border border-slate-300 rounded p-2 h-[515px] w-full">
+                    <ObjectPreview object={""} />
+                </div>
+            </div>
         </div>
     );
 }

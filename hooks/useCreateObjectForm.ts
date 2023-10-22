@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { prisma } from "../lib/prisma-db";
 import { PropertyTypes } from "@prisma/client";
 import { v4 } from "uuid";
 
