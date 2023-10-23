@@ -106,7 +106,7 @@ const ObjectCreateHeader = (props: Props) => {
 
 
     return (
-        <div className='bg-theme-Slate p-4 drop-shadow-sm'>
+        <div className='bg-theme-Slate p-4 drop-shadow-sm z-50'>
             <div className='flex gap-2 text-lg font-semibold mb-2'>
                 <RouteBackButton />
                 <p>

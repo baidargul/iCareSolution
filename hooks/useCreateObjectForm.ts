@@ -99,7 +99,7 @@ export const useCreateObject = create((set) => ({
               {
                 id: v4(),
                 propertyId: propertyId,
-                name: name.toLocaleUpperCase(),
+                name: name?.toLocaleUpperCase(),
                 description: description,
                 index: property.values.length + 1,
                 isDefault: false,

@@ -99,7 +99,7 @@ function getPropertyTypeControl(property: any) {
             propertyType = property?.propertyValues[property?.propertyValues?.length - 1].name
             return (
                 <div>
-                    <Input className="h-6 hover:tracking-wide transition-all" placeholder={property.description} type={propertyType} />
+                    <Input className="h-6" placeholder={property.description} type={propertyType} />
                 </div>
             )
         case "SELECTSINGLE":

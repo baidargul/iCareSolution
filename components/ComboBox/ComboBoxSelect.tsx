@@ -70,11 +70,11 @@ export function ComboBoxSelect(props: ComboBoxProps) {
   if (props.options) statuses = props.options
 
 
-
   React.useEffect(() => {
     if (props.defaultValue) {
       const defaultStatus = statuses.find((status) => status.label === props.defaultValue)
       if (defaultStatus) setSelectedStatus(defaultStatus)
+      if (defaultStatus) props.setValue(defaultStatus.value)
     }
   }, [])
 
