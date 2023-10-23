@@ -111,10 +111,17 @@ const ObjectEditHeader = (props: Props) => {
         <div className='bg-theme-Slate p-4 drop-shadow-sm z-50'>
             <div className='flex gap-2 text-lg font-semibold mb-2 items-center'>
                 <Pencil className='w-4 h-4' />
-                <p>
-                    {
-                        props.editObjectId ? `Edit Object ${props.editObject.name} in ${props.editObject.categories.name}` : `Unknown object`
-                    }
+                <p className='flex gap-2'>
+                    <p>
+                        {
+                            `Edit Object ${props.editObject.name} `
+                        }
+                    </p>
+                    <p className='border-b-2 border-theme-Primary hover:border-b-0 hover:border-t-2 transition-all'>
+                        {
+                            `in ${props.editObject.categories.name}`
+                        }
+                    </p>
                 </p>
             </div>
             <div className='flex flex-row justify-between'>
@@ -132,6 +139,6 @@ const ObjectEditHeader = (props: Props) => {
 export default ObjectEditHeader
 
 function GetObjectType(object: any) {
-    if(object.type==="FIXED") return "Fixed"
-    if(object.type==="VARIANT") return "Variant"
+    if (object.type === "FIXED") return "Fixed"
+    if (object.type === "VARIANT") return "Variant"
 }
