@@ -8,7 +8,7 @@ import React, { Component } from 'react'
 
 type Props = {
     children: React.ReactNode
-    value: string
+    value: string | any
 }
 
 type State = {}

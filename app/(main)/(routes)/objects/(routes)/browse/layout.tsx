@@ -8,9 +8,9 @@ type Props = {
 
 function ObjectBrowseLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="w-full min-h-screen bg-theme-BlackPointer/70 p-2">
+        <div className="w-full min-h-screen bg-theme-BlackPointer/70 p-2 select-none">
             <ObjectBrowseHeader />
-            <div className=" bg-theme-Slate h-[600px] p-2">
+            <div className=" bg-theme-Slate h-[610px] p-2">
                 {
                     children
                 }
