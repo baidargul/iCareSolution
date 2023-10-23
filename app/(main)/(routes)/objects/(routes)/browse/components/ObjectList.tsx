@@ -10,13 +10,27 @@ async function ObjectList({ }: Props) {
             categories: true,
             property: {
                 include: {
-                    propertyValues: true
+                    propertyValues: {
+                        select: {
+                            id: true,
+                            propertyId: true,
+                            name: true,
+                            description: true,
+                            index: true
+                        },
+                        orderBy: {
+                            index: 'asc'
+                        }
+                    }
+                },
+                orderBy: {
+                    name: 'asc'
                 }
             },
         },
         orderBy: [
             {
-                name: 'desc'
+                name: 'asc'
             }
         ]
     });

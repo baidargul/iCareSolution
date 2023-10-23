@@ -57,6 +57,7 @@ model property {
   id             String           @id @default(uuid())
   name           String
   description    String?
+  index         Int?
   type           PropertyTypes
   objectId       String
   objects        objects          @relation(fields: [objectId], references: [id], onDelete: NoAction, onUpdate: NoAction)

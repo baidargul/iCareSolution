@@ -11,12 +11,12 @@ import { Input } from "../ui/input"
 import { ComboBoxSelect } from "../ComboBox/ComboBoxSelect"
 
 type Props = {
-    object: any
+    object?: any
 }
 
 const ObjectPreview = (props: Props) => {
     const objectRef: any = useBrowseObject()
-    const object = objectRef.object
+    const object = props.object ? props.object : objectRef.object
 
     console.log(object)
 
@@ -131,12 +131,12 @@ function getPropertyTypeControl(property: any) {
 
             )
 
-            case "BOOLEAN":
-                return (
-                    <div className="flex items-center gap-2">
-                        <input type="checkbox" className="scale-125" />
-                    </div>
-                )
+        case "BOOLEAN":
+            return (
+                <div className="flex items-center gap-2">
+                    <input type="checkbox" className="scale-125" />
+                </div>
+            )
     }
 
 }

@@ -17,7 +17,7 @@ const ObjectsBrowsePage = () => {
                 </div>
 
                 <div className="bg-white border border-slate-300 rounded p-2 h-[515px] w-full">
-                    <ObjectPreview object={""} />
+                    <ObjectPreview />
                 </div>
             </div>
         </div>
