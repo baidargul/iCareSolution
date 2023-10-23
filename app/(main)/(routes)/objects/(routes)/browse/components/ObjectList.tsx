@@ -24,7 +24,7 @@ async function ObjectList({ }: Props) {
                     }
                 },
                 orderBy: {
-                    name: 'asc'
+                    index: 'asc'
                 }
             },
         },
