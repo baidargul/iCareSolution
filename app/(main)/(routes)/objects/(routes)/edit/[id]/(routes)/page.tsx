@@ -1,6 +1,7 @@
 import React from 'react'
 import { PropertiesContainer } from '../components/propertiesContainer'
 import ObjectSummary from '../components/ObjectSummary'
+import { PropertyTypes } from '@prisma/client'
 
 interface Props {
     params: {
@@ -8,8 +9,42 @@ interface Props {
     }
 }
 
-const EditObject = (props: Props) => {
+type propertyValues = {
+    id: string,
+    name: string;
+    description: string;
+    index: number;
+    propertId: string;
+    isDefault?: boolean;
+}
+
+type property = {
+    id: string,
+    name: string;
+    description: string;
+    type: PropertyTypes;
+    propertyValues: propertyValues[];
+    index: number | null;
+    objectId: string;
+};
+
+type Object = {
+    categories: {
+        id: string,
+        name: string;
+    },
+    categoryId: string,
+    dateCreated: Date | null;
+    id: string,
+    name: string;
+    description: string;
+    type: PropertyTypes;
+    property: property[];
+}
+
+const EditObject = async (props: Props) => {
     const objectId = props.params.id
+
 
 
     return (

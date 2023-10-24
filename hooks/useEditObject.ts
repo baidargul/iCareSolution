@@ -1,0 +1,289 @@
+import { create } from "zustand";
+import { PropertyTypes } from "@prisma/client";
+import { v4 } from "uuid";
+
+type Object = {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  category: string;
+};
+
+type propertyValues = {
+  id: string;
+  propertyId: string;
+  name: string;
+  description: string;
+  index: number;
+  isDefault: boolean;
+};
+
+type property = {
+  id: string;
+  name: string;
+  description: string;
+  type: PropertyTypes;
+  values: propertyValues[];
+  index: number;
+};
+
+export const useEditObject = create((set) => ({
+  object: {} as Object,
+  properties: [] as property[],
+
+  setObject(object: Object) {
+    set(() => ({ object: object }));
+  },
+
+  createProperty(
+    name: string,
+    description: string,
+    type: PropertyTypes,
+    index: number
+  ) {
+    set((state: any) => ({
+      properties: [
+        ...state.properties,
+        {
+          id: v4(),
+          name: name,
+          description: description,
+          type: type,
+          index: index,
+          values: [],
+        },
+      ],
+    }));
+  },
+
+  setObjectValues(
+    name?: string,
+    description?: string,
+    type?: string,
+    category?: string
+  ) {
+    set((prev: any) => ({
+      object: {
+        ...prev.object,
+        name: name || prev.object.name,
+        description: description || prev.object.description,
+        type: type || prev.object.type,
+        categories: {
+          id: prev.object.categories.id,
+          name: category || prev.object.categories.name,
+        },
+      },
+    }));
+  },
+
+  clearProperties() {
+    set(() => ({ properties: [] }));
+  },
+
+  clearObject() {
+    set(() => ({ object: {} }));
+  },
+
+  removeProperty(id: string) {
+    set((state: any) => ({
+      properties: state.properties.filter(
+        (property: property) => property.id !== id
+      ),
+    }));
+  },
+
+  addValueToProperty(propertyId: string, name: string, description: string) {
+    if (!name) return;
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: [
+              ...property.values,
+              {
+                id: v4(),
+                propertyId: propertyId,
+                name: name?.toLocaleUpperCase(),
+                description: description,
+                index: property.values.length + 1,
+                isDefault: false,
+              },
+            ],
+          };
+        }
+        return property;
+      }),
+    }));
+  },
+
+  removeValueFromProperty(propertyId: string, id: string) {
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.filter(
+              (value: propertyValues) => value.id !== id
+            ),
+          };
+        }
+        return property;
+      }),
+    }));
+  },
+
+  changePropertyName(id: string, name: string) {
+    set((state: any) => ({
+      properties: state.properties.map((property: property) =>
+        property.id === id ? { ...property, name: name } : property
+      ),
+    }));
+  },
+
+  changePropertyDescription(id: string, description: string) {
+    set((state: any) => ({
+      properties: state.properties.map((property: property) =>
+        property.id === id
+          ? { ...property, description: description }
+          : property
+      ),
+    }));
+  },
+
+  updatePropertyType(id: string, propertyType: string) {
+    set((state: any) => ({
+      properties: state.properties.map((property: property) =>
+        property.id === id ? { ...property, type: propertyType } : property
+      ),
+    }));
+  },
+
+  updatePropertyValue(propertyId: string, id: string, name: string) {
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.map((value: propertyValues) =>
+              value.id === id ? { ...value, name: name } : value
+            ),
+          };
+        }
+        return property;
+      }),
+    }));
+  },
+
+  movePropertyIndexUp(id: string, index: number) {
+    set((state: any) => {
+      const properties = state.properties;
+
+      if (index === 1) return state; // No need to move if it's already at the top
+
+      // Create a copy of the properties array with the updated indices
+      const updatedProperties = properties.map((property: property) => {
+        if (property.index === index - 1) {
+          return { ...property, index: property.index + 1 };
+        } else if (property.id === id && property.index === index) {
+          return { ...property, index: property.index - 1 };
+        }
+        return property;
+      });
+
+      return { properties: updatedProperties };
+    });
+  },
+
+  movePropertyIndexDown(id: string, index: number) {
+    set((state: any) => {
+      const properties = state.properties;
+      if (index >= properties.length) return state; // No need to move if it's already at the bottom
+
+      // Create a copy of the properties array with the updated indices
+      const updatedProperties = properties.map((property: property) => {
+        if (property.index === index + 1) {
+          return { ...property, index: property.index - 1 };
+        } else if (property.id === id && property.index === index) {
+          return { ...property, index: property.index + 1 };
+        }
+        return property;
+      });
+
+      return { properties: updatedProperties };
+    });
+  },
+
+  movePropertyValueIndexUp(propertyId: string, id: string, index: number) {
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.map((value: propertyValues) => {
+              if (value.index === index - 1) {
+                return { ...value, index: value.index + 1 };
+              } else if (value.id === id && value.index === index) {
+                return { ...value, index: value.index - 1 };
+              }
+              return value;
+            }),
+          };
+        }
+        return property;
+      }),
+    }));
+
+    //sort values array
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.sort(
+              (a: propertyValues, b: propertyValues) => a.index - b.index
+            ),
+          };
+        }
+        return property;
+      }),
+    }));
+  },
+
+  movePropertyValueIndexDown(propertyId: string, id: string, index: number) {
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.map((value: propertyValues) => {
+              if (value.index === index + 1) {
+                return { ...value, index: value.index - 1 };
+              } else if (value.id === id && value.index === index) {
+                return { ...value, index: value.index + 1 };
+              }
+              return value;
+            }),
+          };
+        }
+        return property;
+      }),
+    }));
+
+    //sort values array
+    set((state: any) => ({
+      properties: state.properties.map((property: property) => {
+        if (property.id === propertyId) {
+          return {
+            ...property,
+            values: property.values.sort(
+              (a: propertyValues, b: propertyValues) => a.index - b.index
+            ),
+          };
+        }
+        return property;
+      }),
+    }));
+  },
+}));

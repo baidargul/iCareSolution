@@ -4,9 +4,9 @@ import axios from 'axios'
 import { Pencil } from 'lucide-react'
 import HeaderControls from './HeaderControls'
 import HeaderActions from './HeaderActions'
-import { useCreateObject } from '@/hooks/useCreateObjectForm'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { useEditObject } from '@/hooks/useEditObject'
 type Props = {
     editObjectId?: string | undefined
     availableCategories: any
@@ -14,19 +14,35 @@ type Props = {
 }
 
 const ObjectEditHeader = (props: Props) => {
+    const [object, setObject] = React.useState({} as any)
     const [isDoing, setIsDoing] = React.useState(false)
     const [id, setId] = React.useState(props.editObject?.id || '' as string)
     const [name, setName] = React.useState(props.editObject?.name || '')
     const [description, setDescription] = React.useState(props.editObject?.description || '')
     const [objectType, setObjectType] = React.useState(GetObjectType(props.editObject) as string)
     const [selectedCategory, setSelectedCategory] = React.useState(props.editObject?.categories.name || '' as string)
-    const object: any = props.editObject
-    // const object: any = useCreateObject()
+    const objectRef: any = useEditObject()
+
+    useEffect(() => {
+        // console.log(`Got Prop: `, props.editObject)
+        objectRef.object = props.editObject
+    }, [props.editObject])
+
+    useEffect(() => {
+        // console.log(`objectRef changed to: `, objectRef.object)
+        setObject(props.editObject)
+    }, [objectRef.object])
+
+    useEffect(() => {
+        // console.log(`Object is changed to: `, object)
+    }, [object])
+
+
     const router = useRouter()
 
     useEffect(() => {
-        // object.setObjectValues(id, name, description, objectType, selectedCategory)
-    }, [id, name, description, objectType, selectedCategory])
+        objectRef.setObjectValues(name, description, objectType, selectedCategory)
+    }, [name, description, objectType, selectedCategory])
 
     function resetAll() {
         setIsDoing(false)
@@ -103,7 +119,7 @@ const ObjectEditHeader = (props: Props) => {
     }
 
     const propForwarder = {
-        name, setName, description, setDescription, value: selectedCategory, objectType, object, setObjectType, id, setId, availableCategories: props.availableCategories, setSelectedCategory, isDoing, DoSave, DoDelete,
+        name, setName, description, setDescription, value: selectedCategory, objectType, objectRef, setObjectType, id, setId, availableCategories: props.availableCategories, setSelectedCategory, isDoing, DoSave, DoDelete,
     }
 
 
@@ -111,25 +127,25 @@ const ObjectEditHeader = (props: Props) => {
         <div className='bg-theme-Slate p-4 drop-shadow-sm z-50'>
             <div className='flex gap-2 text-lg font-semibold mb-2 items-center'>
                 <Pencil className='w-4 h-4' />
-                <p className='flex gap-2'>
-                    <p>
+                <div className='flex gap-2'>
+                    <div>
                         {
-                            `Edit Object ${props.editObject.name} `
+                            `Edit Object ${object.name} `
                         }
-                    </p>
-                    <p className='border-b-2 border-theme-Primary hover:border-b-0 hover:border-t-2 transition-all'>
+                    </div>
+                    <div className='border-b-2 border-theme-Primary hover:border-b-0 hover:border-t-2 transition-all'>
                         {
                             `in ${props.editObject.categories.name}`
                         }
-                    </p>
-                </p>
+                    </div>
+                </div>
             </div>
             <div className='flex flex-row justify-between'>
                 <section className='text-lg flex flex-row gap-2 items-center'>
                     <HeaderControls props={{ ...propForwarder }} />
                 </section>
                 <section>
-                    <HeaderActions props={{ ...propForwarder }} />
+                    {/* <HeaderActions props={{ ...propForwarder }} /> */}
                 </section>
             </div>
         </div>

@@ -41,13 +41,13 @@ const ObjectsEditLayout = async (props: Props) => {
         }
     })
 
+
     const categories = await prisma.categories.findMany({
         orderBy: {
             name: 'asc'
         }
     })
 
-    console.log(editObject)
 
     const availableCategories = [] as any;
     categories.map((category) => {
