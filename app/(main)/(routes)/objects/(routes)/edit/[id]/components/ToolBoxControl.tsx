@@ -1,6 +1,6 @@
 'use client'
 import ToolTipProvider from '@/components/ToolTip/ToolTipProvider'
-import { useCreateObject } from '@/hooks/useCreateObjectForm'
+import { useEditObject } from '@/hooks/useEditObject'
 import React from 'react'
 
 type Props = {
@@ -13,10 +13,10 @@ type Props = {
 }
 
 export const ToolBoxControl = (props: Props) => {
-    const objectRef:any = useCreateObject()
+    const objectRef:any = useEditObject()
 
     const handleToolClick = () => {
-        const newIndex = objectRef.properties.length + 1
+        const newIndex = objectRef.object.property.length + 1
         objectRef.createProperty(``, "", props.tool.value, newIndex)
     }
 

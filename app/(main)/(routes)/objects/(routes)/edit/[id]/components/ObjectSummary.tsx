@@ -1,11 +1,11 @@
 'use client'
-import { useCreateObject } from '@/hooks/useCreateObjectForm'
+import { useEditObject } from '@/hooks/useEditObject'
 import React from 'react'
 
 type Props = {}
 
 const ObjectSummary = (props: Props) => {
-    const objectRef: any = useCreateObject()
+    const objectRef: any = useEditObject()
     return (
         <div className='text-xs'>
             <div className='flex gap-1'>
@@ -14,7 +14,7 @@ const ObjectSummary = (props: Props) => {
                 </p>
                 <p>
                     {
-                        objectRef?.properties.length || 0
+                        objectRef?.object.property?.length || 0
                     }
                 </p>
             </div>

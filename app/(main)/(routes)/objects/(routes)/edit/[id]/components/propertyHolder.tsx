@@ -20,7 +20,7 @@ type property = {
     name: string;
     description: string;
     type: PropertyTypes;
-    values: propertyValues[];
+    propertyValues: propertyValues[];
     index: number;
 };
 
@@ -63,13 +63,13 @@ const PropertyHolder = (props: Props) => {
         <div className='p-2 bg-theme-Slate rounded border border-theme-Primary/30'>
             <div className='flex justify-between items-center gap-4'>
                 <div className='w-full flex flex-col gap-2'>
-                    <ToolTipProvider value={`Priority: ${property.index}`}>
+                    <ToolTipProvider value={`Priority: ${property.index || 0}`}>
                         <div className='text-xs flex gap-1 items-center font-semibold opacity-30 rounded-md w-fit'>
                             <p>
                                 {GetPropertyIcon(property)}
                             </p>
                             <p>
-                                Property {property.index}
+                                Property {property.index || 0}
                             </p>
                         </div>
                     </ToolTipProvider>
@@ -78,7 +78,7 @@ const PropertyHolder = (props: Props) => {
                             <div className='font-semibold' >
                                 Name:
                             </div>
-                            <Input placeholder={`Property #${property.index}`} onChange={(e: any) => { objectRef.changePropertyName(property.id, e.target.value) }} />
+                            <Input placeholder={`Property #${property.index || 0}`} onChange={(e: any) => { objectRef.changePropertyName(property.id, e.target.value) }} value={property.name} />
                         </section>
                         <section className='flex items-center gap-2'>
                             <div className='font-semibold' >
@@ -87,7 +87,7 @@ const PropertyHolder = (props: Props) => {
                             <Input placeholder={property.description} onChange={(e: any) => { objectRef.changePropertyDescription(property.id, e.target.value) }} />
                         </section>
                         <section className='flex items-center gap-2'>
-                            <ComboBoxSelect defaultValue={GetPropertyDescription(property)} title={`Type:`} prompt='Search property types' options={propertyTypes} setValue={setSelectedProperty} />
+                            <ComboBoxSelect defaultValue={GetPropertyDescription(property)} title={`Type:`} prompt='Search property types' options={propertyTypes} setValue={setSelectedProperty} value={property.description} />
                         </section>
                         <section className='flex items-center gap-2'>
                             {
@@ -182,10 +182,11 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
 
     switch (property.type) {
         case "TEXT":
+            const type = property.propertyValues[0]?.name
             return (
                 <>
                     <div className='flex items-center gap-2'>
-                        <ComboBoxSelect title='Format:' options={inputOptions} prompt='Input types' setValue={handleTextValue} defaultValue='Text' />
+                        <ComboBoxSelect title='Format:' options={inputOptions} prompt='Input types' setValue={handleTextValue} defaultValue={type} />
                     </div>
                 </>
             )
@@ -246,7 +247,7 @@ function GetPropertyValues(property: property, objectRef: any, isHover: any, set
                 <div className='w-full border-2 border-theme-Primary/30  border-dashed rounded p-2'>
                     <div className='grid grid-cols-6 gap-2 justify-items-center'>
                         {
-                            property.values.map((value, index) => {
+                            property.propertyValues.map((value, index) => {
                                 return (
                                     <button className='relative ' key={index} onClick={() => setIsHover(value.id)} onBlur={() => setIsHover('')} onKeyDown={(e) => e.key === "Enter" || e.key === "Escape" ? setIsHover('') : null}>
                                         <div className='w-36 bg-theme-Secondry/70 p-1 text-center text-black hover:bg-theme-Secondry/50  cursor-pointer transition-all rounded overflow-hidden text-ellipsis'>
@@ -274,7 +275,7 @@ function GetPropertyValues(property: property, objectRef: any, isHover: any, set
                 <div className='w-full border-2 border-theme-Primary/30  border-dashed rounded p-2'>
                     <div className='grid grid-cols-6 gap-2 justify-items-center'>
                         {
-                            property.values.map((value, index) => {
+                            property.propertyValues.map((value, index) => {
                                 return (
                                     <button className='relative ' key={index} onClick={() => setIsHover(value.id)} onBlur={() => setIsHover('')} onKeyDown={(e) => e.key === "Enter" || e.key === "Escape" ? setIsHover('') : null}>
                                         <div className='w-36 bg-theme-Secondry/70 p-1 text-center text-black hover:bg-theme-Secondry/50  cursor-pointer transition-all rounded overflow-hidden text-ellipsis'>
@@ -295,7 +296,7 @@ function GetPropertyValues(property: property, objectRef: any, isHover: any, set
                                                         <ArrowLeft onClick={() => { setIsHover(false); objectRef.movePropertyValueIndexUp(property.id, value.id, value.index); }} className=' text-theme-BlackPointer/80' />
                                                     </ToolTipProvider>
                                                 </div>
-                                                <div className={`${value.index === property.values.length ? "hidden" : "block"} border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2`}>
+                                                <div className={`${value.index === property.propertyValues.length ? "hidden" : "block"} border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2`}>
                                                     <ToolTipProvider value={`Shift Right`}>
                                                         <ArrowRight onClick={() => { setIsHover(false); objectRef.movePropertyValueIndexDown(property.id, value.id, value.index); }} className=' text-theme-BlackPointer/80' />
                                                     </ToolTipProvider>

@@ -145,7 +145,7 @@ const ObjectEditHeader = (props: Props) => {
                     <HeaderControls props={{ ...propForwarder }} />
                 </section>
                 <section>
-                    {/* <HeaderActions props={{ ...propForwarder }} /> */}
+                    <HeaderActions props={{ ...propForwarder }} />
                 </section>
             </div>
         </div>
