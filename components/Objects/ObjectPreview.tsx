@@ -9,16 +9,17 @@ import ToolTipProvider from "../ToolTip/ToolTipProvider"
 import { Separator } from "../ui/separator"
 import { Input } from "../ui/input"
 import { ComboBoxSelect } from "../ComboBox/ComboBoxSelect"
+import { useRouter } from "next/navigation"
 
 type Props = {
     object?: any
+    showEditOption?: boolean
 }
 
 const ObjectPreview = (props: Props) => {
     const objectRef: any = useBrowseObject()
     const object = props.object ? props.object : objectRef.object
-
-    console.log(object)
+    const router = useRouter()
 
     function getObjectType(object: any) {
         switch (object.type) {
@@ -32,6 +33,10 @@ const ObjectPreview = (props: Props) => {
                     <HelpCircle className="text-xs" />
                 )
         }
+    }
+
+    const handleEditOptionClicked = () => {
+        router.push(`/objects/edit/${object.id}`)
     }
 
     return (
@@ -53,6 +58,9 @@ const ObjectPreview = (props: Props) => {
                     <div className='tracking-wider text-xs font-semibold flex items-center border-b-2 border-theme-Primary/40 cursor-pointer hover:border-t-2 transition-all hover:border-b-0'>
                         in {object?.categories?.name}
                     </div>
+                    <section onClick={handleEditOptionClicked} className={`${!props.showEditOption && "hidden"} text-xs py-2 font-semibold text-theme-Primary cursor-pointer text-right hover:-translate-y-1 transition-all`}>
+                        Edit
+                    </section>
                 </div>
                 <div className="text-xs ml-7 leading-tight mt-1">
                     {
