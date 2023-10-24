@@ -1,8 +1,9 @@
 'use client'
+import ContextMenuProvider from '@/components/ContextMenu/ContextMenuProvider'
 import ToolTipProvider from '@/components/ToolTip/ToolTipProvider'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useBrowseObject } from '@/hooks/useBrowseObject'
-
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 type objects = {
@@ -37,6 +38,7 @@ function ObjectListAction(props: Props) {
     const [objects, setObjects] = useState(props.objects)
     const objectRef: any = useBrowseObject()
     const [isMounted, setIsMounted] = useState(false)
+    const router = useRouter()
 
     useEffect(() => {
         if (!isMounted) {
@@ -54,29 +56,45 @@ function ObjectListAction(props: Props) {
                 objects && isMounted && <div className="flex flex-col justify-start">
                     {
                         objects.map((object: objects) => {
-                            console.log(object)
+                            const ContextMenu = [
+                                {
+                                    label: 'Edit',
+                                    onClick: () => {
+                                        router.push(`/objects/edit/${object.id}`)
+                                    }
+                                },
+                                {
+                                    label: 'Delete',
+                                    onClick: () => {
+                                        console.log(`Clicked Delete`)
+                                    }
+                                }
+                            ]
                             return (
-                                <div key={object.id} onClick={() => handleObjectSelection(object)} className={`grid grid-cols-3 items-center justify-items-center ${object.id === objectRef.object?.id ? "bg-theme-Primary/20" : ""} cursor-pointer hover:bg-theme-Primary/10 p-2`}>
-                                    <ToolTipProvider value={object.name}>
-                                        <div className='font-semibold text-xs overflow-hidden text-ellipsis w-16 whitespace-nowrap'>
+                                <ContextMenuProvider options={ContextMenu}>
+                                    <div key={object.id} onClick={() => handleObjectSelection(object)} className={`grid grid-cols-3 items-center justify-items-center ${object.id === objectRef.object?.id ? "bg-theme-Primary/20" : ""} cursor-pointer hover:bg-theme-Primary/10 p-2`}>
+                                        <ToolTipProvider value={object.name}>
+                                            <div className='font-semibold text-xs overflow-hidden text-ellipsis w-16 whitespace-nowrap'>
+                                                {
+                                                    object.name
+                                                }
+                                            </div>
+                                        </ToolTipProvider>
+                                        <div className='tracking-tighter text-xs uppercase'>
                                             {
-                                                object.name
+                                                object.type
                                             }
                                         </div>
-                                    </ToolTipProvider>
-                                    <div className='tracking-tighter text-xs uppercase'>
-                                        {
-                                            object.type
-                                        }
+                                        <ToolTipProvider value={object.categories.name}>
+                                            <div className='tracking-tighter overflow-hidden text-ellipsis w-16 whitespace-nowrap text-xs uppercase border-b-2 border-theme-BlackPointer/30 hover:border-t-2 hover:border-b-0 transition-all'>
+                                                {
+                                                    object?.categories?.name
+                                                }
+                                            </div>
+                                        </ToolTipProvider>
                                     </div>
-                                    <ToolTipProvider value={object.categories.name}>
-                                        <div className='tracking-tighter overflow-hidden text-ellipsis w-16 whitespace-nowrap text-xs uppercase border-b-2 border-theme-BlackPointer/30 hover:border-t-2 hover:border-b-0 transition-all'>
-                                            {
-                                                object?.categories?.name
-                                            }
-                                        </div>
-                                    </ToolTipProvider>
-                                </div>
+                                </ContextMenuProvider>
+
                             )
                         })
                     }
