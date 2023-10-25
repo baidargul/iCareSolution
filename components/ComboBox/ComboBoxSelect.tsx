@@ -46,34 +46,10 @@ interface ComboBoxProps {
 }
 
 export function ComboBoxSelect(props: ComboBoxProps) {
-  // let statuses: Status[] = [
-  //   {
-  //     value: "FIXED",
-  //     label: "Fixed",
-  //     icon: CheckCircle2,
-  //   },
-  //   {
-  //     value: "VARIANT",
-  //     label: "Variant",
-  //     icon: HelpCircle,
-  //   },
-  // ]
+  // console.log(props)
   const [open, setOpen] = React.useState(false)
-  const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
-    null
-  )
-  const [statuses, setStatuses] = React.useState<Status[]>([
-    {
-      value: "FIXED",
-      label: "Fixed",
-      icon: CheckCircle2,
-    },
-    {
-      value: "VARIANT",
-      label: "Variant",
-      icon: HelpCircle,
-    },
-  ])
+  const [statuses, setStatuses] = React.useState<Status[]>(props.options || [])
+  const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(null)
 
   function selectValue(value: Status) {
     setSelectedStatus(value)
@@ -81,12 +57,12 @@ export function ComboBoxSelect(props: ComboBoxProps) {
     setOpen(false)
   }
 
+
   React.useEffect(() => {
+    setStatuses(props.options)
+  }, [])
 
-    if (props.options) {
-      setStatuses(props.options)
-    }
-
+  React.useEffect(() => {
 
     if (props.defaultValue) {
       const defaultStatus = statuses.find((status) => status.label.toLocaleUpperCase() === props.defaultValue?.toLocaleUpperCase())
@@ -94,12 +70,6 @@ export function ComboBoxSelect(props: ComboBoxProps) {
       if (defaultStatus) props.setValue(defaultStatus.value || defaultStatus)
     }
 
-    const temp = {
-      title: props.title,
-      options: statuses,
-    }
-
-    console.log(temp)
   }, [])
 
   return (

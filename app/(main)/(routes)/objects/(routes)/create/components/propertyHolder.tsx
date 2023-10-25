@@ -185,7 +185,7 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
             return (
                 <>
                     <div className='flex items-center gap-2'>
-                        <ComboBoxSelect title='Format:' options={inputOptions} prompt='Input types' setValue={handleTextValue} defaultValue='Text' />
+                        <ComboBoxSelect title='Format:' options={inputOptions} prompt='Input types' setValue={handleTextValue} defaultValue={inputOptions[0].label} />
                     </div>
                 </>
             )

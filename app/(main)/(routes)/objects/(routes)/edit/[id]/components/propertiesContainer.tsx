@@ -11,7 +11,6 @@ export const PropertiesContainer = (props: Props) => {
     if (objectRef?.object.property) {
         objectRef?.object.property.sort((a: any, b: any) => a.index - b.index);
     }
-    console.log(objectRef.object.property)
 
     
     return (
