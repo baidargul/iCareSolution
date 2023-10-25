@@ -222,9 +222,10 @@ export const useEditObject = create((set) => ({
       prevValue.index = index;
     }
 
-    console.log(`Value: `,value)
-    console.log(`preValue: `,prevValue)
-
+    //sort values array
+    property.propertyValues.sort(
+      (a: propertyValues, b: propertyValues) => a.index - b.index
+    );
     set(() => ({ object: object }));
   },
 
@@ -242,6 +243,11 @@ export const useEditObject = create((set) => ({
     if (nextValue) {
       nextValue.index = index;
     }
+
+    //sort values array
+    property.propertyValues.sort(
+      (a: propertyValues, b: propertyValues) => a.index - b.index
+    );
 
     set(() => ({ object: object }));
   },

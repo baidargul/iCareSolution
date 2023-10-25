@@ -29,19 +29,19 @@ type Props = {
 }
 
 const PropertyHolder = (props: Props) => {
-    const property = props.property
+    const [property, setProperty] = useState<property>(props.property)
     const [selectedProperty, setSelectedProperty] = useState<string>(property.type)
     const [currentValue, setCurrentValue] = useState<string>('')
     const [isHover, setIsHover] = useState<string>('')
     const objectRef: any = useEditObject();
 
     useEffect(() => {
+        setProperty(props.property)
+    },[props.property])
+
+    useEffect(() => {
         objectRef.updatePropertyType(property.id, selectedProperty)
     }, [selectedProperty])
-
-    // useEffect(() => {
-    //     console.log(`Property changed to: `, property)
-    // },[property.name])
 
     const propertyTypes = [
         {
@@ -100,7 +100,7 @@ const PropertyHolder = (props: Props) => {
                         </section>
                     </div>
                     {
-                        GetPropertyValues(property, objectRef, isHover, setIsHover)
+                       objectRef.object &&  GetPropertyValues(property, objectRef, isHover, setIsHover)
                     }
                 </div>
                 <div className='flex flex-col gap-1 w-fit'>
