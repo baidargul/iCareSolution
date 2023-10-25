@@ -4,8 +4,8 @@ import { Trash, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Check, CheckCheck, Te
 import ToolTipProvider from '@/components/ToolTip/ToolTipProvider';
 import { Input } from '@/components/ui/input';
 import { ComboBoxSelect } from '@/components/ComboBox/ComboBoxSelect';
-import { useCreateObject } from '@/hooks/useCreateObjectForm';
 import { Button } from '@/components/ui/button';
+import { useEditObject } from '@/hooks/useEditObject';
 
 type propertyValues = {
     id: string,
@@ -33,11 +33,15 @@ const PropertyHolder = (props: Props) => {
     const [selectedProperty, setSelectedProperty] = useState<string>(property.type)
     const [currentValue, setCurrentValue] = useState<string>('')
     const [isHover, setIsHover] = useState<string>('')
-    const objectRef: any = useCreateObject();
+    const objectRef: any = useEditObject();
 
     useEffect(() => {
         objectRef.updatePropertyType(property.id, selectedProperty)
     }, [selectedProperty])
+
+    // useEffect(() => {
+    //     console.log(`Property changed to: `, property)
+    // },[property.name])
 
     const propertyTypes = [
         {
@@ -106,7 +110,7 @@ const PropertyHolder = (props: Props) => {
                         </div>
                     </ToolTipProvider>
                     <ToolTipProvider value='Move down'>
-                        <div onClick={() => objectRef.movePropertyIndexDown(property.id, property.index)} className={`${property.index === objectRef.properties.length ? "hidden" : "block"} cursor-pointer flex items-center justify-center w-6 h-6 bg-blue-100/30 border-2 border-blue-800 p-1 rounded-full`}>
+                        <div onClick={() => objectRef.movePropertyIndexDown(property.id, property.index)} className={`${property.index === objectRef.object.property.length ? "hidden" : "block"} cursor-pointer flex items-center justify-center w-6 h-6 bg-blue-100/30 border-2 border-blue-800 p-1 rounded-full`}>
                             <ArrowDown className='w-4 h-4  text-blue-800  hover:scale-75 transition-all ' />
                         </div>
                     </ToolTipProvider>
@@ -135,7 +139,7 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
 
     function handleTextValue(value: string) {
         setCurrentValue(value)
-        const valueId = objectRef.properties.values[0]?.id
+        const valueId = objectRef.object.property.values[0]?.id
         if (valueId) {
             objectRef.updatePropertyValue(objectRef.object.id, valueId, value)
         } else {
@@ -256,14 +260,26 @@ function GetPropertyValues(property: property, objectRef: any, isHover: any, set
                                             </div>
                                         </ToolTipProvider>
                                         <div className={`p-2  ${isHover === value.id ? "block" : "hidden"} justify-center items-center  mt-1 rounded-md drop-shadow-sm border-slate-400 border absolute bg-theme-Slate w-full`}>
-                                            <div className='text-sm font-semibold opacity-60'>
+                                            <div className='text-sm font-semibold'>
                                                 Actions
                                             </div>
-                                            <div className='border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2'>
-                                                <ToolTipProvider key={index} value={`Remove`}>
-                                                    <Trash className=' text-theme-BlackPointer/80' onClick={() => { handleRemoveEvent(property.id, value.id) }} />
-                                                </ToolTipProvider>
-                                            </div>
+                                            <section className='flex justify-evenly items-center gap-2 bg-theme-Slate'>
+                                                <div className='border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2'>
+                                                    <ToolTipProvider value={`Remove`}>
+                                                        <Trash onClick={() => { handleRemoveEvent(property.id, value.id) }} className=' text-theme-BlackPointer/80' />
+                                                    </ToolTipProvider>
+                                                </div>
+                                                <div className={`${value.index === 1 ? "hidden" : "block"} border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2`}>
+                                                    <ToolTipProvider value={`Shift Left`}>
+                                                        <ArrowLeft onClick={() => { setIsHover(false); objectRef.movePropertyValueIndexUp(property.id, value.id, value.index); }} className=' text-theme-BlackPointer/80' />
+                                                    </ToolTipProvider>
+                                                </div>
+                                                <div className={`${value.index === property.propertyValues.length ? "hidden" : "block"} border-2 text-theme-BlackPointer/80 rounded-md w-fit p-1 mt-2`}>
+                                                    <ToolTipProvider value={`Shift Right`}>
+                                                        <ArrowRight onClick={() => { setIsHover(false); objectRef.movePropertyValueIndexDown(property.id, value.id, value.index); }} className=' text-theme-BlackPointer/80' />
+                                                    </ToolTipProvider>
+                                                </div>
+                                            </section>
                                         </div>
                                     </button>
                                 )
@@ -279,14 +295,14 @@ function GetPropertyValues(property: property, objectRef: any, isHover: any, set
                         {
                             property.propertyValues.map((value, index) => {
                                 return (
-                                    <button className='relative ' key={index} onClick={() => setIsHover(value.id)} onBlur={() => setIsHover('')} onKeyDown={(e) => e.key === "Enter" || e.key === "Escape" ? setIsHover('') : null}>
+                                    <button className='relative z-2' key={index} onClick={() => setIsHover(value.id)} onBlur={() => setIsHover('')} onKeyDown={(e) => e.key === "Enter" || e.key === "Escape" ? setIsHover('') : null}>
                                         <ToolTipProvider value={`${value.name}`}>
                                             <div className='w-36 bg-theme-Secondry/70 p-1 text-center text-black hover:bg-theme-Secondry/50 whitespace-nowrap overflow-hidden text-ellipsis  cursor-pointer transition-all rounded '>
                                                 {value.name}
                                             </div>
                                         </ToolTipProvider>
                                         <div className={`p-2  ${isHover === value.id ? "block" : "hidden"} justify-center items-center  mt-1 rounded-md drop-shadow-sm border-slate-400 border absolute bg-theme-Slate w-full`}>
-                                            <div className='text-sm font-semibold opacity-60'>
+                                            <div className='text-sm font-semibold'>
                                                 Actions
                                             </div>
                                             <section className='flex justify-evenly items-center gap-2'>

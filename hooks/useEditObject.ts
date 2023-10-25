@@ -3,34 +3,40 @@ import { PropertyTypes } from "@prisma/client";
 import { v4 } from "uuid";
 
 type Object = {
+  categories: {
+    id: string;
+    name: string;
+  };
+  categoryId: string;
+  dateCreated: string;
+  description: string;
   id: string;
   name: string;
-  description: string;
+  property: property[];
   type: string;
-  category: string;
-};
-
-type propertyValues = {
-  id: string;
-  propertyId: string;
-  name: string;
-  description: string;
-  index: number;
-  isDefault: boolean;
 };
 
 type property = {
-  id: string;
-  name: string;
   description: string;
-  type: PropertyTypes;
-  values: propertyValues[];
+  id: string;
   index: number;
+  name: string;
+  objectId: string;
+  propertyValues: propertyValues[];
+  type: PropertyTypes;
+};
+
+type propertyValues = {
+  description: string;
+  id: string;
+  index: number;
+  name: string;
+  propertyId: string;
+  isDefault: boolean;
 };
 
 export const useEditObject = create((set) => ({
   object: {} as Object,
-  properties: [] as property[],
 
   setObject(object: Object) {
     set(() => ({ object: object }));
@@ -86,204 +92,157 @@ export const useEditObject = create((set) => ({
   },
 
   removeProperty(id: string) {
-    set((state: any) => ({
-      properties: state.properties.filter(
-        (property: property) => property.id !== id
-      ),
-    }));
+    const object: Object = this.object as Object;
+    object.property = object.property.filter((p: any) => p.id !== id);
+
+    object.property.map((p: any, index: number) => {
+      //set new index for all properties
+      p.index = index + 1;
+    });
+
+    set(() => ({ object: object }));
   },
 
   addValueToProperty(propertyId: string, name: string, description: string) {
     if (!name) return;
-    set((state: any) => ({
-      properties: state.properties.map((property: property) => {
-        if (property.id === propertyId) {
-          return {
-            ...property,
-            values: [
-              ...property.values,
-              {
-                id: v4(),
-                propertyId: propertyId,
-                name: name?.toLocaleUpperCase(),
-                description: description,
-                index: property.values.length + 1,
-                isDefault: false,
-              },
-            ],
-          };
-        }
-        return property;
-      }),
-    }));
+    const object: Object = this.object as Object;
+    const property = object.property.find((p: any) => p.id === propertyId);
+    if (!property) return;
+    property.propertyValues.push({
+      id: v4(),
+      name: name,
+      description: description,
+      index: property.propertyValues.length,
+      propertyId: propertyId,
+      isDefault: false,
+    });
   },
 
   removeValueFromProperty(propertyId: string, id: string) {
-    set((state: any) => ({
-      properties: state.properties.map((property: property) => {
-        if (property.id === propertyId) {
-          return {
-            ...property,
-            values: property.values.filter(
-              (value: propertyValues) => value.id !== id
-            ),
-          };
-        }
-        return property;
-      }),
-    }));
+    const object: Object = this.object as Object;
+    const property = object.property.find((p: any) => p.id === propertyId);
+    if (!property) return;
+    property.propertyValues = property.propertyValues.filter(
+      (v: any) => v.id !== id
+    );
+
+    property.propertyValues.map((v: any, index: number) => {
+      //set new index for all properties
+      v.index = index + 1;
+    });
+
+    set(() => ({ object: object }));
   },
 
   changePropertyName(id: string, name: string) {
-    set((state: any) => ({
-      properties: state.properties.map((property: property) =>
-        property.id === id ? { ...property, name: name } : property
-      ),
-    }));
+    const object: Object = this.object as Object;
+    const property = object.property.find((p: any) => p.id === id);
+    if (!property) return;
+    property.name = name;
+    set(() => ({ object: object }));
   },
 
   changePropertyDescription(id: string, description: string) {
-    set((state: any) => ({
-      properties: state.properties.map((property: property) =>
-        property.id === id
-          ? { ...property, description: description }
-          : property
-      ),
-    }));
+    const object: Object = this.object as Object;
+    const property = object.property.find((p: any) => p.id === id);
+    if (!property) return;
+    property.description = description;
+    set(() => ({ object: object }));
   },
 
   updatePropertyType(id: string, propertyType: string) {
-    set((state: any) => ({
-      properties: state.properties.map((property: property) =>
-        property.id === id ? { ...property, type: propertyType } : property
-      ),
-    }));
+    const object: Object = this.object as Object;
+    const property = object.property.find((p: any) => p.id === id);
+    if (!property) return;
+    property.type = propertyType;
+    set(() => ({ object: object }));
   },
 
   updatePropertyValue(propertyId: string, id: string, name: string) {
-    set((state: any) => ({
-      properties: state.properties.map((property: property) => {
-        if (property.id === propertyId) {
-          return {
-            ...property,
-            values: property.values.map((value: propertyValues) =>
-              value.id === id ? { ...value, name: name } : value
-            ),
-          };
-        }
-        return property;
-      }),
-    }));
+    const object: Object = this.object as Object;
+    const property = object.property.find((p: any) => p.id === propertyId);
+    if (!property) return;
+    const value = property.propertyValues.find((v: any) => v.id === id);
+    if (!value) return;
+    value.name = name;
+    set(() => ({ object: object }));
   },
 
   movePropertyIndexUp(id: string, index: number) {
-    set((state: any) => {
-      const properties = state.properties;
-
-      if (index === 1) return state; // No need to move if it's already at the top
-
-      // Create a copy of the properties array with the updated indices
-      const updatedProperties = properties.map((property: property) => {
-        if (property.index === index - 1) {
-          return { ...property, index: property.index + 1 };
-        } else if (property.id === id && property.index === index) {
-          return { ...property, index: property.index - 1 };
-        }
-        return property;
-      });
-
-      return { properties: updatedProperties };
+    if (index === 1) return;
+    console.log(`Target Index: `, index);
+    const object: Object = this.object as Object;
+    let prevProperty;
+    object.property.map((p: any) => {
+      if (p.index === index - 1 && p !== null) {
+        prevProperty = p;
+      }
     });
+    const property = object.property.find((p: any) => p.id === id);
+    if (!property) return;
+    property.index = index - 1;
+    if (prevProperty) {
+      prevProperty.index = index;
+    }
+    console.log(`Prev property `, prevProperty);
+    console.log(`This property `, property);
+    set(() => ({ object: object }));
   },
 
   movePropertyIndexDown(id: string, index: number) {
-    set((state: any) => {
-      const properties = state.properties;
-      if (index >= properties.length) return state; // No need to move if it's already at the bottom
-
-      // Create a copy of the properties array with the updated indices
-      const updatedProperties = properties.map((property: property) => {
-        if (property.index === index + 1) {
-          return { ...property, index: property.index - 1 };
-        } else if (property.id === id && property.index === index) {
-          return { ...property, index: property.index + 1 };
-        }
-        return property;
-      });
-
-      return { properties: updatedProperties };
+    if (index === this.object.property.length) return;
+    const object: Object = this.object as Object;
+    let nextProperty;
+    object.property.map((p: any) => {
+      if (p.index === index + 1 && p !== null) {
+        nextProperty = p;
+      }
     });
+    const property = object.property.find((p: any) => p.id === id);
+    if (!property) return;
+    property.index = index + 1;
+    if (nextProperty) {
+      nextProperty.index = index;
+    }
+    set(() => ({ object: object }));
   },
 
   movePropertyValueIndexUp(propertyId: string, id: string, index: number) {
-    set((state: any) => ({
-      properties: state.properties.map((property: property) => {
-        if (property.id === propertyId) {
-          return {
-            ...property,
-            values: property.values.map((value: propertyValues) => {
-              if (value.index === index - 1) {
-                return { ...value, index: value.index + 1 };
-              } else if (value.id === id && value.index === index) {
-                return { ...value, index: value.index - 1 };
-              }
-              return value;
-            }),
-          };
-        }
-        return property;
-      }),
-    }));
+    const object: Object = this.object as Object;
+    const property = object.property.find((p: any) => p.id === propertyId);
+    if (!property) return;
+    const value = property.propertyValues.find((v: any) => v.id === id);
+    const prevValue = property.propertyValues.find(
+      (v: any) => v.index === index - 1
+    );
+    if (!value) return;
+    value.index = index - 1;
 
-    //sort values array
-    set((state: any) => ({
-      properties: state.properties.map((property: property) => {
-        if (property.id === propertyId) {
-          return {
-            ...property,
-            values: property.values.sort(
-              (a: propertyValues, b: propertyValues) => a.index - b.index
-            ),
-          };
-        }
-        return property;
-      }),
-    }));
+    if (prevValue) {
+      prevValue.index = index;
+    }
+
+    console.log(`Value: `,value)
+    console.log(`preValue: `,prevValue)
+
+    set(() => ({ object: object }));
   },
 
   movePropertyValueIndexDown(propertyId: string, id: string, index: number) {
-    set((state: any) => ({
-      properties: state.properties.map((property: property) => {
-        if (property.id === propertyId) {
-          return {
-            ...property,
-            values: property.values.map((value: propertyValues) => {
-              if (value.index === index + 1) {
-                return { ...value, index: value.index - 1 };
-              } else if (value.id === id && value.index === index) {
-                return { ...value, index: value.index + 1 };
-              }
-              return value;
-            }),
-          };
-        }
-        return property;
-      }),
-    }));
+    const object: Object = this.object as Object;
+    const property = object.property.find((p: any) => p.id === propertyId);
+    if (!property) return;
+    const value = property.propertyValues.find((v: any) => v.id === id);
+    const nextValue = property.propertyValues.find(
+      (v: any) => v.index === index + 1
+    );
+    if (!value) return;
+    value.index = index + 1;
 
-    //sort values array
-    set((state: any) => ({
-      properties: state.properties.map((property: property) => {
-        if (property.id === propertyId) {
-          return {
-            ...property,
-            values: property.values.sort(
-              (a: propertyValues, b: propertyValues) => a.index - b.index
-            ),
-          };
-        }
-        return property;
-      }),
-    }));
+    if (nextValue) {
+      nextValue.index = index;
+    }
+
+    set(() => ({ object: object }));
   },
 }));

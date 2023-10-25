@@ -24,7 +24,7 @@ export default function HeaderControls({ props }: any) {
             icon: HelpCircle,
         },
     ]
-
+    
     useEffect(() => {
         setIsMounted(true)
     }, [])

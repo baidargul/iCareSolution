@@ -29,7 +29,7 @@ const ObjectEditHeader = (props: Props) => {
     }, [props.editObject])
 
     useEffect(() => {
-        // console.log(`objectRef changed to: `, objectRef.object)
+        console.log(`objectRef changed to: `, objectRef.object)
         setObject(props.editObject)
     }, [objectRef.object])
 
@@ -91,17 +91,19 @@ const ObjectEditHeader = (props: Props) => {
             properties: targetProperties
         }
 
-        await axios.post('/api/objects', { ...product }).then((res) => {
-            const data = res.data;
-            if (data.status != 200) {
-                toast.error(`Error!`, { description: data.message })
-                return
-            } else {
-                toast.success(`Success!`, { description: data.message })
-                resetAll()
-                router.refresh()
-            }
-        })
+        // await axios.post('/api/objects', { ...product }).then((res) => {
+        //     const data = res.data;
+        //     if (data.status != 200) {
+        //         toast.error(`Error!`, { description: data.message })
+        //         return
+        //     } else {
+        //         toast.success(`Success!`, { description: data.message })
+        //         resetAll()
+        //         router.refresh()
+        //     }
+        // })
+
+        console.log(objectRef.object)
 
         setIsDoing(false)
     }
