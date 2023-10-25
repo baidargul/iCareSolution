@@ -250,9 +250,11 @@ function GetPropertyValues(property: property, objectRef: any, isHover: any, set
                             property.propertyValues.map((value, index) => {
                                 return (
                                     <button className='relative ' key={index} onClick={() => setIsHover(value.id)} onBlur={() => setIsHover('')} onKeyDown={(e) => e.key === "Enter" || e.key === "Escape" ? setIsHover('') : null}>
-                                        <div className='w-36 bg-theme-Secondry/70 p-1 text-center text-black hover:bg-theme-Secondry/50  cursor-pointer transition-all rounded overflow-hidden text-ellipsis'>
-                                            {value.name}
-                                        </div>
+                                        <ToolTipProvider value={`${value.name}`}>
+                                            <div className='w-36 bg-theme-Secondry/70 p-1 text-center text-black hover:bg-theme-Secondry/50 whitespace-nowrap overflow-hidden text-ellipsis  cursor-pointer transition-all rounded '>
+                                                {value.name}
+                                            </div>
+                                        </ToolTipProvider>
                                         <div className={`p-2  ${isHover === value.id ? "block" : "hidden"} justify-center items-center  mt-1 rounded-md drop-shadow-sm border-slate-400 border absolute bg-theme-Slate w-full`}>
                                             <div className='text-sm font-semibold opacity-60'>
                                                 Actions
@@ -278,9 +280,11 @@ function GetPropertyValues(property: property, objectRef: any, isHover: any, set
                             property.propertyValues.map((value, index) => {
                                 return (
                                     <button className='relative ' key={index} onClick={() => setIsHover(value.id)} onBlur={() => setIsHover('')} onKeyDown={(e) => e.key === "Enter" || e.key === "Escape" ? setIsHover('') : null}>
-                                        <div className='w-36 bg-theme-Secondry/70 p-1 text-center text-black hover:bg-theme-Secondry/50  cursor-pointer transition-all rounded overflow-hidden text-ellipsis'>
-                                            {value.name}
-                                        </div>
+                                        <ToolTipProvider value={`${value.name}`}>
+                                            <div className='w-36 bg-theme-Secondry/70 p-1 text-center text-black hover:bg-theme-Secondry/50 whitespace-nowrap overflow-hidden text-ellipsis  cursor-pointer transition-all rounded '>
+                                                {value.name}
+                                            </div>
+                                        </ToolTipProvider>
                                         <div className={`p-2  ${isHover === value.id ? "block" : "hidden"} justify-center items-center  mt-1 rounded-md drop-shadow-sm border-slate-400 border absolute bg-theme-Slate w-full`}>
                                             <div className='text-sm font-semibold opacity-60'>
                                                 Actions
