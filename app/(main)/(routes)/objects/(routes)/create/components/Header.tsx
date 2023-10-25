@@ -17,8 +17,8 @@ const ObjectCreateHeader = (props: Props) => {
     const [id, setId] = React.useState('' as string)
     const [name, setName] = React.useState('')
     const [description, setDescription] = React.useState('')
-    const [objectType, setObjectType] = React.useState('FIXED' as string)
-    const [selectedCategory, setSelectedCategory] = React.useState('' as string)
+    const [objectType, setObjectType] = React.useState('Fixed' as string)
+    const [selectedCategory, setSelectedCategory] = React.useState(props?.availableCategories[0].label || '' as string)
     const object: any = useCreateObject()
     const router = useRouter()
 
@@ -73,6 +73,7 @@ const ObjectCreateHeader = (props: Props) => {
             properties: targetProperties
         }
 
+
         await axios.post('/api/objects', { ...product }).then((res) => {
             const data = res.data;
             if (data.status != 200) {
@@ -106,7 +107,7 @@ const ObjectCreateHeader = (props: Props) => {
 
 
     return (
-        <div className='bg-theme-Slate p-4 drop-shadow-sm z-50'>
+        <div className='bg-theme-Slate p-4 drop-shadow-sm'>
             <div className='flex gap-2 text-lg font-semibold mb-2'>
                 <RouteBackButton />
                 <p>

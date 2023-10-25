@@ -30,18 +30,7 @@ type Status = {
   icon?: LucideIcon
 }
 
-let statuses: Status[] = [
-  {
-    value: "FIXED",
-    label: "Fixed",
-    icon: CheckCircle2,
-  },
-  {
-    value: "VARIANT",
-    label: "Variant",
-    icon: HelpCircle,
-  },
-]
+
 
 type Sides = "top" | "bottom" | "left" | "right"
 
@@ -57,10 +46,35 @@ interface ComboBoxProps {
 }
 
 export function ComboBoxSelect(props: ComboBoxProps) {
+  // let statuses: Status[] = [
+  //   {
+  //     value: "FIXED",
+  //     label: "Fixed",
+  //     icon: CheckCircle2,
+  //   },
+  //   {
+  //     value: "VARIANT",
+  //     label: "Variant",
+  //     icon: HelpCircle,
+  //   },
+  // ]
   const [open, setOpen] = React.useState(false)
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
     null
   )
+  const [statuses, setStatuses] = React.useState<Status[]>([
+    {
+      value: "FIXED",
+      label: "Fixed",
+      icon: CheckCircle2,
+    },
+    {
+      value: "VARIANT",
+      label: "Variant",
+      icon: HelpCircle,
+    },
+  ])
+
   function selectValue(value: Status) {
     setSelectedStatus(value)
     props.setValue(value.value)
@@ -70,7 +84,7 @@ export function ComboBoxSelect(props: ComboBoxProps) {
   React.useEffect(() => {
 
     if (props.options) {
-      statuses = props.options
+      setStatuses(props.options)
     }
 
 
@@ -79,6 +93,13 @@ export function ComboBoxSelect(props: ComboBoxProps) {
       if (defaultStatus) setSelectedStatus(defaultStatus)
       if (defaultStatus) props.setValue(defaultStatus.value || defaultStatus)
     }
+
+    const temp = {
+      title: props.title,
+      options: statuses,
+    }
+
+    console.log(temp)
   }, [])
 
   return (
@@ -109,7 +130,7 @@ export function ComboBoxSelect(props: ComboBoxProps) {
               <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
-                  {statuses.map((status) => (
+                  {statuses.length > 0 ? statuses.map((status) => (
                     <CommandItem
                       key={status.value}
                       onSelect={() => selectValue(status)}
@@ -124,7 +145,7 @@ export function ComboBoxSelect(props: ComboBoxProps) {
                       />}
                       <span>{status.label}</span>
                     </CommandItem>
-                  ))}
+                  )) : null}
                 </CommandGroup>
               </CommandList>
             </Command>
