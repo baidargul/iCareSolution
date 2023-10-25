@@ -115,6 +115,7 @@ export async function POST(req: Request) {
           description: property.description,
           type: property.type,
           objectId: newObject.id,
+          index: property.index,
         },
       });
 
