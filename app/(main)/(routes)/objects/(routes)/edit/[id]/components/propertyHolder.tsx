@@ -37,7 +37,7 @@ const PropertyHolder = (props: Props) => {
 
     useEffect(() => {
         setProperty(props.property)
-    },[props.property])
+    }, [props.property])
 
     useEffect(() => {
         objectRef.updatePropertyType(property.id, selectedProperty)
@@ -100,7 +100,7 @@ const PropertyHolder = (props: Props) => {
                         </section>
                     </div>
                     {
-                       objectRef.object &&  GetPropertyValues(property, objectRef, isHover, setIsHover)
+                        objectRef.object && GetPropertyValues(property, objectRef, isHover, setIsHover)
                     }
                 </div>
                 <div className='flex flex-col gap-1 w-fit'>
@@ -186,7 +186,7 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
 
     switch (property.type) {
         case "TEXT":
-            const type = property.propertyValues[0]?.name
+            const type = property.propertyValues[0]?.name || 'TEXT'
             return (
                 <>
                     <div className='flex items-center gap-2'>

@@ -49,17 +49,20 @@ export const useEditObject = create((set) => ({
     index: number
   ) {
     set((state: any) => ({
-      properties: [
-        ...state.properties,
-        {
-          id: v4(),
-          name: name,
-          description: description,
-          type: type,
-          index: index,
-          values: [],
-        },
-      ],
+      object: {
+        ...state.object,
+        property: [
+          ...state.object.property,
+          {
+            id: v4(),
+            name: name,
+            description: description,
+            type: type,
+            index: index,
+            propertyValues: [],
+          },
+        ],
+      },
     }));
   },
 
