@@ -4,10 +4,12 @@ import { ScrollArea } from "../ui/scroll-area";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation"
 import { UserButton } from "@clerk/nextjs";
+import useNavigationMenuSideBar from "@/hooks/useNavigationMenuSideBar";
 
 const NavigationMenuSideBar = () => {
     const params = useParams()
     const router = useRouter()
+    const pageRef: any = useNavigationMenuSideBar()
     const options = [
         {
             name: "overview",
@@ -58,11 +60,12 @@ const NavigationMenuSideBar = () => {
             link: "/accounts"
         },
     ]
-    const [active, setActive] = useState(options[0].name)
+    const [active, setActive] = useState(pageRef?.page|| options[0].name)
 
 
     function handleClick(option: any) {
         setActive(option.name)
+        pageRef.changePage(option.name)
         router.push(option.link)
     }
 
