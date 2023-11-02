@@ -94,10 +94,10 @@ export async function PATCH(req: Request) {
 
     console.log(databaseObject);
 
-    if (databaseObject.name !== name.toUpperCase()) {
+    if (databaseObject.name.toUpperCase() !== name.toUpperCase()) {
       const object = await prisma.objects.findMany({
         where: {
-          name: name.toUpperCase(),
+          name: name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),
           type: type.toUpperCase(),
           categoryId: categories.id,
           NOT: {
@@ -115,14 +115,13 @@ export async function PATCH(req: Request) {
       }
     }
 
-    console.log(`Was there`);
     const categoryId = await prisma.categories.findUnique({
       where: {
         name: categories.name,
       },
     });
 
-    if(!categoryId) {
+    if (!categoryId) {
       response.status = 400;
       response.message = "Category does not exist";
       response.data = null;
@@ -135,8 +134,10 @@ export async function PATCH(req: Request) {
         id: id,
       },
       data: {
-        name: name.toUpperCase(),
-        description: description.charAt(0).toUpperCase() + description.slice(1).toLowerCase(),
+        name: name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),
+        description:
+          description.charAt(0).toUpperCase() +
+          description.slice(1).toLowerCase(),
         type: type,
         categoryId: categoryId.id,
       },
@@ -224,7 +225,7 @@ export async function POST(req: Request) {
 
     let object = await prisma.objects.findMany({
       where: {
-        name: name.toUpperCase(),
+        name: name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),
         type: objectType.toUpperCase(),
         categoryId: category.id,
       },
@@ -240,8 +241,10 @@ export async function POST(req: Request) {
 
     const newObject = await prisma.objects.create({
       data: {
-        name: name.toUpperCase(),
-        description: description,
+        name: name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),
+        description:
+          description.charAt(0).toUpperCase() +
+          description.slice(1).toLowerCase(),
         type: objectType,
         categoryId: categoryID?.id,
       },
@@ -252,7 +255,9 @@ export async function POST(req: Request) {
     properties.forEach(async (property: any) => {
       const ID = await prisma.property.findMany({
         where: {
-          name: property.name.toUpperCase(),
+          name:
+            property.name.charAt(0).toUpperCase() +
+            property.name.slice(1).toLowerCase(),
           objectId: newObject.id,
         },
       });
@@ -272,9 +277,13 @@ export async function POST(req: Request) {
     properties.forEach(async (property: any) => {
       const newProperty = await prisma.property.create({
         data: {
-          name: property.name.toUpperCase(),
-          description: property.description,
-          type: property.type,
+          name:
+            property.name.charAt(0).toUpperCase() +
+            property.name.slice(1).toLowerCase(),
+          description:
+            property.description.charAt(0).toUpperCase() +
+            property.description.slice(1).toLowerCase(),
+          type: property.type.toUpperCase(),
           objectId: newObject.id,
           index: property.index,
         },
@@ -287,8 +296,12 @@ export async function POST(req: Request) {
           data: {
             id: value.id,
             propertyId: newProperty.id,
-            name: value.name.toUpperCase(),
-            description: value.description,
+            name:
+              value.name.charAt(0).toUpperCase() +
+              value.name.slice(1).toLowerCase(),
+            description:
+              value.description.charAt(0).toUpperCase() +
+              value.description.slice(1).toLowerCase(),
             index: value.index,
           },
         });
@@ -298,8 +311,12 @@ export async function POST(req: Request) {
             data: {
               id: value.id,
               propertyId: newProperty.id,
-              name: value.name.toUpperCase(),
-              description: value.description,
+              name:
+                value.name.charAt(0).toUpperCase() +
+                value.name.slice(1).toLowerCase(),
+              description:
+                value.description.charAt(0).toUpperCase() +
+                value.description.slice(1).toLowerCase(),
               index: value.index,
             },
           });
