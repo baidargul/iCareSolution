@@ -1,7 +1,45 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma-db";
 import currentProfile from "@/lib/current-profile";
-import { property } from "@prisma/client";
+
+export async function PATCH(req: Request) {
+  const response = {
+    status: 400,
+    message: "SERVER ERROR",
+    data: {} || null,
+  };
+
+  const profile = await currentProfile();
+  if (!profile) {
+    response.status = 401;
+    response.message = "Unauthorized";
+    response.data = null;
+    // throw new Error("Unauthorized");
+    return new NextResponse(JSON.stringify(response));
+  }
+
+  try {
+
+    
+
+    response.status = 200;
+    response.message = "Object updated";
+    // response.data = newObject;
+    console.log(`[SERVER SUCCESS] ${response.message}`);
+  } catch (error: any) {
+    console.log(`[SERVER ERROR] ${error}`);
+    return new NextResponse(
+      JSON.stringify({
+        ...response,
+        message: error.message,
+        status: error.status,
+        data: null,
+      })
+    );
+  }
+  
+  return new NextResponse(JSON.stringify(response));
+}
 
 export async function POST(req: Request) {
   const response = {

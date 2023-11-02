@@ -56,8 +56,12 @@ const ObjectEditHeader = (props: Props) => {
 
     const DoSave = async () => {
         setIsDoing(true)
-        const targetObject = object.object
-        const targetProperties = object.properties
+        const targetObject = objectRef.object
+        const targetProperties = objectRef.object.property
+
+        console.log(targetObject)
+        // const targetObject = object.object
+        // const targetProperties = object.properties
 
         if (targetObject.name.length < 1) {
             setIsDoing(false)
@@ -65,13 +69,14 @@ const ObjectEditHeader = (props: Props) => {
             return
         }
 
+
         if (targetObject.type.length < 1) {
             setIsDoing(false)
             toast.error(`Warning!`, { description: "Please select an object type" })
             return
         }
 
-        if (targetObject.category.length < 1) {
+        if (targetObject.categories.length < 1) {
             setIsDoing(false)
             toast.error(`Warning!`, { description: "Please select an object category" })
             return
@@ -84,26 +89,24 @@ const ObjectEditHeader = (props: Props) => {
         }
 
         const product = {
-            name,
-            description,
-            objectType,
-            category: selectedCategory,
-            properties: targetProperties
+            ...targetObject
         }
 
-        // await axios.post('/api/objects', { ...product }).then((res) => {
-        //     const data = res.data;
-        //     if (data.status != 200) {
-        //         toast.error(`Error!`, { description: data.message })
-        //         return
-        //     } else {
-        //         toast.success(`Success!`, { description: data.message })
-        //         resetAll()
-        //         router.refresh()
-        //     }
-        // })
+        console.log(`Product: `, product)
 
-        console.log(objectRef.object)
+        await axios.patch('/api/objects', { ...product }).then((res) => {
+            const data = res.data;
+            if (data.status != 200) {
+                toast.error(`Error!`, { description: data.message })
+                return
+            } else {
+                toast.success(`Success!`, { description: data.message })
+                resetAll()
+                router.refresh()
+            }
+        })
+
+        // console.log(objectRef.object)
 
         setIsDoing(false)
     }
