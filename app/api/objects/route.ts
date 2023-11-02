@@ -19,8 +19,131 @@ export async function PATCH(req: Request) {
   }
 
   try {
+    let {
+      id,
+      name,
+      description,
+      type,
+      categories,
+      property: properties,
+    } = await req.json();
 
-    
+    if (!id) {
+      response.status = 400;
+      response.message = "ID is required";
+      response.data = null;
+      // throw new Error("ID is required");
+      return new NextResponse(JSON.stringify(response));
+    }
+
+    if (!name) {
+      response.status = 400;
+      response.message = "Name is required";
+      response.data = null;
+      // throw new Error("Name is required");
+      return new NextResponse(JSON.stringify(response));
+    }
+
+    if (!type) {
+      type = "FIXED";
+    }
+
+    if (!categories) {
+      response.status = 400;
+      response.message = "Category is required";
+      response.data = null;
+      // throw new Error("Category is required");
+      return new NextResponse(JSON.stringify(response));
+    }
+
+    if (!description) {
+      description = "";
+    }
+
+    let databaseObject = await prisma.objects.findFirst({
+      include: {
+        categories: true,
+        property: {
+          include: {
+            propertyValues: {
+              orderBy: {
+                index: "asc",
+              },
+            },
+          },
+          orderBy: {
+            index: "asc",
+          },
+        },
+      },
+      where: {
+        id: id,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+
+    if (!databaseObject) {
+      response.status = 400;
+      response.message = "No object found in system";
+      response.data = null;
+      // throw new Error("Object does not exist");
+      return new NextResponse(JSON.stringify(response));
+    }
+
+    console.log(databaseObject);
+
+    if (databaseObject.name !== name.toUpperCase()) {
+      const object = await prisma.objects.findMany({
+        where: {
+          name: name.toUpperCase(),
+          type: type.toUpperCase(),
+          categoryId: categories.id,
+          NOT: {
+            id: id,
+          },
+        },
+      });
+
+      if (object.length !== 0) {
+        response.status = 400;
+        response.message =
+          "Object already exists, in this category with same type and name.";
+        response.data = null;
+        return new NextResponse(JSON.stringify(response));
+      }
+    }
+
+    console.log(`Was there`);
+    const categoryId = await prisma.categories.findUnique({
+      where: {
+        name: categories.name,
+      },
+    });
+
+    if(!categoryId) {
+      response.status = 400;
+      response.message = "Category does not exist";
+      response.data = null;
+      // throw new Error("Category does not exist");
+      return new NextResponse(JSON.stringify(response));
+    }
+
+    let newObject: any = await prisma.objects.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: name.toUpperCase(),
+        description: description.charAt(0).toUpperCase() + description.slice(1).toLowerCase(),
+        type: type,
+        categoryId: categoryId.id,
+      },
+    });
+
+    console.log(`New Object: `, newObject);
+    newObject = null;
 
     response.status = 200;
     response.message = "Object updated";
@@ -37,7 +160,7 @@ export async function PATCH(req: Request) {
       })
     );
   }
-  
+
   return new NextResponse(JSON.stringify(response));
 }
 

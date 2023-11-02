@@ -101,7 +101,7 @@ const ObjectEditHeader = (props: Props) => {
                 return
             } else {
                 toast.success(`Success!`, { description: data.message })
-                resetAll()
+                // resetAll()
                 router.refresh()
             }
         })
