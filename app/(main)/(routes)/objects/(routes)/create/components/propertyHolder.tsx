@@ -139,6 +139,12 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
         if (valueId) {
             objectRef.updatePropertyValue(objectRef.object.id, valueId, value)
         } else {
+            if(value=== `TEXT` && property.values.length > 0)
+            {
+              property.values.map((value, index) => {
+                objectRef.removeValueFromProperty(property.id, value.id)
+              })
+            } 
             objectRef.addValueToProperty(property.id, value, "")
         }
 

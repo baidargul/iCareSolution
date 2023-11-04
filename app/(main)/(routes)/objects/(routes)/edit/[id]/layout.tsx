@@ -24,7 +24,7 @@ const ObjectsEditLayout = async (props: Props) => {
                 include: {
                     propertyValues: {
                         orderBy: {
-                            index: 'asc'
+                            index: 'desc'
                         }
                     }
                 },

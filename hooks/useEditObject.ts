@@ -111,14 +111,32 @@ export const useEditObject = create((set) => ({
     const object: Object = this.object as Object;
     const property = object.property.find((p: any) => p.id === propertyId);
     if (!property) return;
+
+    
+    property.propertyValues.sort(
+      (a: propertyValues, b: propertyValues) => a.index - b.index
+    )
+
+    let found: boolean = false;
+    property.propertyValues.map((v: any) => {
+      if (v.name.toUpperCase() === name.toLocaleUpperCase()) {
+        found = true;
+      }
+    });
+
+    if(found) return;
+
     property.propertyValues.push({
       id: v4(),
       name: name,
       description: description,
-      index: property.propertyValues.length,
+      index: property.propertyValues.length + 1,
       propertyId: propertyId,
       isDefault: false,
     });
+
+
+    set(() => ({ object: object }));
   },
 
   removeValueFromProperty(propertyId: string, id: string) {

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma-db";
 import currentProfile from "@/lib/current-profile";
+import { v4 } from "uuid";
 
 export async function PATCH(req: Request) {
   const response = {
@@ -142,6 +143,206 @@ export async function PATCH(req: Request) {
         categoryId: categoryId.id,
       },
     });
+
+    //UPDATE PROPERTIES THAT ARE THE SAME
+    properties.forEach(async (property: any) => {
+      if (databaseObject) {
+        databaseObject.property.forEach(async (databaseProperty: any) => {
+          if (databaseProperty.id === property.id) {
+            await prisma.property.update({
+              where: {
+                id: property.id,
+              },
+              data: {
+                name:
+                  property.name.charAt(0).toUpperCase() +
+                  property.name.slice(1).toLowerCase(),
+                description:
+                  property.description.charAt(0).toUpperCase() +
+                  property.description.slice(1).toLowerCase(),
+                type: property.type.toUpperCase(),
+                index: property.index,
+              },
+            });
+
+            //ADD NEW PROPERTY VALUES THAT ARE NOT IN THE DATABASE
+            property.propertyValues.forEach(async (value: any) => {
+              const ID = await prisma.propertyValues.findMany({
+                where: {
+                  id: value.id,
+                  propertyId: property.id,
+                },
+              });
+              if (ID.length === 0) {
+                await prisma.propertyValues.create({
+                  data: {
+                    id: value.id,
+                    propertyId: property.id,
+                    name:
+                      value.name.charAt(0).toUpperCase() +
+                      value.name.slice(1).toLowerCase(),
+                    description:
+                      value.description.charAt(0).toUpperCase() +
+                      value.description.slice(1).toLowerCase(),
+                    index: value.index,
+                  },
+                });
+              }
+            });
+
+
+            //UPDATE PROPERTY VALUES THAT ARE THE SAME
+            if (property.type === "TEXT") {
+              console.log(`Available values: `, property.propertyValues);
+              const lastValueIndex = property.propertyValues.length - 1;
+              const value = property.propertyValues[lastValueIndex];
+              console.log(`Working on:`, value);
+              
+
+
+              const updatedValue = await prisma.propertyValues.update({
+                where: {
+                  id: value.id,
+                  propertyId: property.id,
+                },
+                data: {
+                  name:
+                    value.name.charAt(0).toUpperCase() +
+                    value.name.slice(1).toLowerCase(),
+                  description:
+                    value.description.charAt(0).toUpperCase() +
+                    value.description.slice(1).toLowerCase(),
+                  index: value.index,
+                },
+              });
+              console.log(`Updated value: `, updatedValue);
+            } else {
+              property.propertyvalues.forEach(async (value: any) => {
+                await prisma.propertyValues.update({
+                  where: {
+                    id: value.id,
+                    propertyId: property.id,
+                  },
+                  data: {
+                    name:
+                      value.name.charAt(0).toUpperCase() +
+                      value.name.slice(1).toLowerCase(),
+                    description:
+                      value.description.charAt(0).toUpperCase() +
+                      value.description.slice(1).toLowerCase(),
+                    index: value.index,
+                  },
+                });
+              });
+            }
+
+            //DELETE PROPERTY VALUES THAT ARE NOT IN THE SUBMITTED DATA
+            databaseProperty.propertyValues.forEach(
+              async (databaseValue: any) => {
+                let found = false;
+                property.propertyValues.forEach(async (value: any) => {
+                  if (databaseValue.id === value.id) {
+                    found = true;
+                  }
+                });
+                if (!found) {
+                  await prisma.propertyValues.delete({
+                    where: {
+                      id: databaseValue.id,
+                    },
+                  });
+                }
+              }
+            );
+
+
+            
+          }
+        });
+      }
+    });
+
+    //IF SUBMITTED PROPERTIES ARE LESS THAN DATABASE PROPERTIES DELETE THE EXCESS
+    // if (properties.length < databaseObject.property.length) {
+    //   databaseObject.property.forEach(async (databaseProperty: any) => {
+    //     let found = false;
+    //     properties.forEach(async (property: any) => {
+    //       if (databaseProperty.id === property.id) {
+    //         found = true;
+    //       }
+    //     });
+    //     if (!found) {
+    //       await prisma.property.delete({
+    //         where: {
+    //           id: databaseProperty.id,
+    //         },
+    //       });
+    //     }
+    //   });
+    // }
+
+    //IF SUBMITTED PROPERTIES ARE MORE THAN DATABASE PROPERTIES ADD THE EXCESS
+    // if (properties.length > databaseObject.property.length) {
+    //   properties.forEach(async (property: any) => {
+    //     let found = false;
+    //     if (databaseObject) {
+    //       databaseObject.property.forEach(async (databaseProperty: any) => {
+    //         if (databaseProperty.id === property.id) {
+    //           found = true;
+    //         }
+    //       });
+    //     }
+    //     if (!found) {
+    //       const newProperty = await prisma.property.create({
+    //         data: {
+    //           name:
+    //             property.name.charAt(0).toUpperCase() +
+    //             property.name.slice(1).toLowerCase(),
+    //           description:
+    //             property.description.charAt(0).toUpperCase() +
+    //             property.description.slice(1).toLowerCase(),
+    //           type: property.type.toUpperCase(),
+    //           objectId: newObject.id,
+    //           index: property.index,
+    //         },
+    //       });
+
+    //       if (property.type === "TEXT") {
+    //         const lastValueIndex = property.propertyValues.length - 1;
+    //         const value = property.propertyValues[lastValueIndex];
+    //         await prisma.propertyValues.create({
+    //           data: {
+    //             id: v4(),
+    //             propertyId: newProperty.id,
+    //             name:
+    //               value.name.charAt(0).toUpperCase() +
+    //               value.name.slice(1).toLowerCase(),
+    //             description:
+    //               value.description.charAt(0).toUpperCase() +
+    //               value.description.slice(1).toLowerCase(),
+    //             index: value.index,
+    //           },
+    //         });
+    //       } else {
+    //         property.values.forEach(async (value: any) => {
+    //           await prisma.propertyValues.create({
+    //             data: {
+    //               id: value.id,
+    //               propertyId: newProperty.id,
+    //               name:
+    //                 value.name.charAt(0).toUpperCase() +
+    //                 value.name.slice(1).toLowerCase(),
+    //               description:
+    //                 value.description.charAt(0).toUpperCase() +
+    //                 value.description.slice(1).toLowerCase(),
+    //               index: value.index,
+    //             },
+    //           });
+    //         });
+    //       }
+    //     }
+    //   });
+    // }
 
     console.log(`New Object: `, newObject);
     newObject = null;

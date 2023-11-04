@@ -72,7 +72,7 @@ model purchaseRegister {
 }
 
 model propertyValues {
-  id          String   @id @default(uuid())
+  id          String   @id @unique @default(uuid())
   propertyId  String
   name        String
   description String

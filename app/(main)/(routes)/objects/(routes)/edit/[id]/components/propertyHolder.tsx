@@ -88,7 +88,7 @@ const PropertyHolder = (props: Props) => {
                             <div className='font-semibold' >
                                 Description:
                             </div>
-                            <Input placeholder={property.description} onChange={(e: any) => { objectRef.changePropertyDescription(property.id, e.target.value) }} />
+                            <Input value={property.description} onChange={(e: any) => { objectRef.changePropertyDescription(property.id, e.target.value) }} />
                         </section>
                         <section className='flex items-center gap-2'>
                             <ComboBoxSelect defaultValue={GetPropertyDescription(property)} title={`Type:`} prompt='Search property types' options={propertyTypes} setValue={setSelectedProperty} value={property.description} />
@@ -139,11 +139,19 @@ function GetPropertyPanel(property: property, currentValue: string, setCurrentVa
 
     function handleTextValue(value: string) {
         setCurrentValue(value)
-        const valueId = objectRef.object.property.values[0]?.id
+        // const valueId = objectRef.object.property.values[0]?.id
+        const valueId = property.propertyValues[0]?.id
         if (valueId) {
             objectRef.updatePropertyValue(objectRef.object.id, valueId, value)
         } else {
-            objectRef.addValueToProperty(property.id, value, "")
+            //Loop to check if the value exists, if yes then remove it 
+            property.propertyValues.forEach((value: any) => {
+                if (value.name.toLocaleUpperCase() === currentValue.toLocaleUpperCase()) {
+                    objectRef.removeValueFromProperty(property.id, value.id)
+                }
+            })
+
+            objectRef.addValueToProperty(property.id, value.charAt(0).toLocaleUpperCase() + value.slice(1).toLocaleLowerCase(), "")
         }
 
         setCurrentValue('')
